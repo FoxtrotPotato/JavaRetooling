@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <title>Modify Egg</title>
+</head>
+
+    <body>
+        <div class="container">
+            <br>
+            <h3>Egg Directory</h3>
+            <hr>
+            <p class="h4 mb-4">Save Egg</p>
+            <form action="#" th:action="@{/eggs/save}" th:object="${egg}" method="POST">
+                <input type="text" th:field="*{eggId}" class="form-control mb-4 w-25" th:readonly="${true}" disabled="disabled">
+                <input type="hidden" th:field="*{eggId}" />
+                <input type="text" th:field="*{eggBirthDay}" class="form-control mb-4 w-25">
+                <button type="submit" class="btn btn-info col-2">Save</button>
+            </form>
+
+            <hr>
+            <a th:href="@{/eggs/list}">Back to Eggs List</a>
+
+        </div>
+
+    </body>
+
+</html>
+

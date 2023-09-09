@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <title>New Transaction</title>
+</head>
+
+<body>
+<div class="container">
+    <h3>Transaction Directory</h3>
+    <hr>
+    <p class="h4 mb-4">New Transaction</p>
+    <form action="#" th:action="@{/transactions/save}" th:object="${transaction}" method="POST">
+        <input type="hidden" th:field="*{transactionId}">
+        <input type="hidden" th:field="*{transactionDate}">
+        <input type="hidden" th:field="*{transactionTotal}">
+
+        <table id="invoiceTable" class="table table-bordered table-striped">
+            <thead class="table-dark">
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- filas de la tabla agregadas dinámicamente -->
+            </tbody>
+        </table>
+        <br>
+        <button onclick="addRow()">Add Product</button>
+        <br><br><hr>
+
+        <input  type="hidden" th:field="*{transactionTotal}">
+        <input id="total" type="number" th:field="*{transactionTotal}" class="form-control mb-4 w-25" th:disabled="true">
+        <input type="text" th:field="*{transactionObservation}" class="form-control mb-4 w-255">
+        <button type="submit" class="btn btn-info col-2">Save</button>
+    </form>
+</div>
+
+<footer class="help-footnote">
+    <hr>
+    <a th:href="@{/transactions/list}">< Back to Transactions List</a>
+    <br>
+    <a th:href="@{/index.html}"> << Back to Homepage</a>
+</footer>
+
+
+<script src="js/transaction.js"></script>
+</body>
+
+</html>
+

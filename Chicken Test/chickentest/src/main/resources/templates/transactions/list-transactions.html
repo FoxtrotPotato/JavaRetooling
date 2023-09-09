@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+	<title>Transaction Directory</title>
+</head>
+
+<body>
+
+<div class="container">
+	<h3>Transaction Directory</h3>
+	<hr>
+
+	<a th:href="@{/transactions/showAddTransactionForm}" class = "btn btn-primary btn-sm mb-3">New Transaction</a>
+
+	<table class="table table-bordered table-striped">
+		<thead class="table-dark">
+			<tr>
+				<th>#</th>
+				<th>Date</th>
+				<th>Total</th>
+				<th>Observations</th>
+                <th>Action</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr th:each="tempTransaction : ${transactions}">
+
+				<td th:text="${tempTransaction.transactionId}" />
+				<td th:text="${tempTransaction.transactionDate}" />
+				<td th:text="${tempTransaction.transactionTotal}" />
+				<td th:text="${tempTransaction.transactionObservations}" />
+				<td>
+					<a th:href="@{/transactions/showTransactionDetails(transactionId=${tempTransaction.transactionId})}" class="btn btn-info col-4">Show Details</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<footer class="help-footnote">
+	<hr>
+	<a th:href="@{/index.html}"> << Back to Homepage</a>
+</footer>
+
+</body>
+</html>
+
+
+

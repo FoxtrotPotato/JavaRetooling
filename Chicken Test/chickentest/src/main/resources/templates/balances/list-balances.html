@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+	<title>Balance Directory</title>
+</head>
+
+<body>
+
+
+<div class="container">
+	<br>
+	<h3>Balance Directory</h3>
+	<hr>
+
+	<table class="table table-bordered table-striped">
+		<thead class="table-dark">
+			<tr>
+				<th>#</th>
+				<th>Type</th>
+				<th>Total</th>
+				<th>Transaction Id</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr th:each="tempBalance : ${balances}">
+				<td th:text="${tempBalance.balanceId}" />
+				<td th:text="${tempBalance.balanceType}" />
+				<td th:text="${tempBalance.balanceTotal}" />
+				<td th:text="${tempBalance.transaction}" />
+				<td>
+					<a th:href="@{/balances/showUpdateBalanceForm(balanceId=${tempBalance.balanceId})}" class = "btn btn-info btn-sm">Add Details</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>
+
+<footer class="help-footnote">
+	<hr>
+	<a th:href="@{/index.html}"> << Back to Homepage</a>
+</footer>
+
+</body>
+</html>
+
+
+
