@@ -49,9 +49,17 @@ public class TransactionController {
     }
 
     @PostMapping("/save")
-    public String saveTransaction(@ModelAttribute("transaction") Transaction theTransaction) {
-        transactionService.save(theTransaction);
-        return "redirect:/transactions/list";
+    public String saveTransaction(@ModelAttribute("transaction") Transaction theTransaction, Model theModel) {
+        try {
+
+
+//            transactionService.save(theTransaction);
+            theModel.addAttribute("notification", "Los datos se han enviado correctamente.");
+            return "redirect:/transactions/list";
+        } catch (Exception e) {
+            theModel.addAttribute("error", "Ha ocurrido un error al guardar los datos.");
+            return "transactions/transaction-form";
+        }
     }
 
 }

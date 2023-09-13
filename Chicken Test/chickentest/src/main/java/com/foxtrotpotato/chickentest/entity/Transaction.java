@@ -34,10 +34,10 @@ public class Transaction {
 
     public Transaction(){}
 
-    public Transaction(LocalDateTime transactionDate, Float transactionTotal, String transactionObservation) {
+    public Transaction(LocalDateTime transactionDate, Float transactionTotal, String transactionObservations) {
         this.transactionDate = transactionDate;
         this.transactionTotal = transactionTotal;
-        this.transactionObservations = transactionObservation;
+        this.transactionObservations = transactionObservations;
     }
 
     public int getTransactionId() {
@@ -64,12 +64,12 @@ public class Transaction {
         this.transactionTotal = transactionTotal;
     }
 
-    public String getTransactionObservation() {
+    public String getTransactionObservations() {
         return transactionObservations;
     }
 
-    public void setTransactionObservation(String transactionObservation) {
-        this.transactionObservations = transactionObservation;
+    public void setTransactionObservations(String transactionObservations) {
+        this.transactionObservations = transactionObservations;
     }
 
     public Farm getFarm() {
@@ -88,7 +88,7 @@ public class Transaction {
         this.transactionDetails = transactionDetails;
     }
 
-    public void addReview(TransactionDetail theTransactionDetail) {
+    public void addTransactionDetails(TransactionDetail theTransactionDetail) {
         if (transactionDetails == null) {
             transactionDetails = new ArrayList<>();
         }

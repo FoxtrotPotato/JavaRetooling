@@ -10,43 +10,87 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
+
     <title>New Transaction</title>
 </head>
 
 <body>
-<div class="container">
+
+<div class="container-fluid">
+    <br>
     <h3>Transaction Directory</h3>
     <hr>
     <p class="h4 mb-4">New Transaction</p>
-    <form action="#" th:action="@{/transactions/save}" th:object="${transaction}" method="POST">
-        <input type="hidden" th:field="*{transactionId}">
-        <input type="hidden" th:field="*{transactionDate}">
-        <input type="hidden" th:field="*{transactionTotal}">
 
-        <table id="invoiceTable" class="table table-bordered table-striped">
-            <thead class="table-dark">
-            <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Subtotal</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- filas de la tabla agregadas dinámicamente -->
-            </tbody>
-        </table>
-        <br>
-        <button onclick="addRow()">Add Product</button>
-        <br><br><hr>
+    <div class="container-fluid row">
+        <div class="container col-2">
+            <label for="type" class="form-label">Type</label>
+            <select class="form-select" id="type">
+                <option value="1">Sell</option>
+                <option value="2">Buy</option>
+            </select>
+        </div>
+        <div class="container col-2">
+            <label for="product" class="form-label ">Product</label>
+            <select class="form-select" id="product">
+                <option value="0"></option>
+                <option value="1">Egg</option>
+                <option value="2">Chicken</option>
+            </select>
+        </div>
+        <div class="container col-2">
+            <label for="quantity" class="form-label ">Quantity</label>
+            <input type="number" id="quantity" class="form-control col-2 md-2">
+        </div>
+        <div class="container col-2">
+            <label for="price" class="form-label">Price</label>
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">$</span>
+                <input type="number" id="price" class="form-control col-2 md-2" placeholder="0.00">
+            </div>
+        </div>
+        <div class="container col-4">
+            <p class="form-label ">Subtotal</p>
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon2">$</span>
+                <span type="number" id="subtotal" class="form-control col-2 md-2 text-end" readonly></span>
+            </div>
+        </div>
+    </div>
 
-        <input  type="hidden" th:field="*{transactionTotal}">
-        <input id="total" type="number" th:field="*{transactionTotal}" class="form-control mb-4 w-25" th:disabled="true">
-        <input type="text" th:field="*{transactionObservation}" class="form-control mb-4 w-255">
-        <button type="submit" class="btn btn-info col-2">Save</button>
-    </form>
+    <br>
+
+    <div class="container-fluid row justify-content-end">
+        <div class="col-8 align-self-start">
+            <label for="observations" class="form-label fw-semibold">Observations</label>
+            <input id="observations" type="text" class="form-control">
+        </div>
+        <div class="col-4 align-self-end">
+            <p class="form-label fw-semibold">Total </p>
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon3">$</span>
+                <span id="total" type="number" class="form-control text-end" readonly></span>
+            </div>
+        </div>
+    </div>
+
+    <br><br>
+
+    <div class="container-fluid row justify-content-end">
+        <div th:if="${notification}" class="alert alert-success col-8">
+            <p th:text="${notification}">success</p>
+        </div>
+        <div class="col offset-md-8">
+            <div class="d-grid mx-auto">
+                <button id="save" class="btn btn-outline-success btn-lg">Save</button>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            </div>
+        </div>
+    </div>
+
 </div>
+
+<br>
 
 <footer class="help-footnote">
     <hr>
@@ -56,7 +100,9 @@
 </footer>
 
 
-<script src="js/transaction.js"></script>
+<script src="../js/transaction.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </body>
 
 </html>

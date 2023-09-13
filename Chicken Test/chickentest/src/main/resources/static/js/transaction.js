@@ -1,44 +1,76 @@
-let invoiceTable = document.getElementById("invoiceTable");
-let totalElement = document.getElementById("total");
-let rowCount = 1;  // generar IDs únicos para cada fila
+let typeObject = document.getElementById("type");
+let productObject = document.getElementById("product");
+let quantityObject = document.getElementById("quantity");
+let priceObject = document.getElementById("price");
+let subtotalObject = document.getElementById("subtotal");
+let observationsObject = document.getElementById("observations");
+let totalObject = document.getElementById("total");
 
-function addRow() {
-    let newRow = invoiceTable.insertRow();
-    newRow.id = "row" + rowCount;
+typeObject.addEventListener("change", calculateSubtotal);
+quantityObject.addEventListener("change", calculateSubtotal);
+priceObject.addEventListener("change", calculateSubtotal);
+document.getElementById("save").addEventListener("click", save);
 
-    let productCell = newRow.insertCell(0);
-    let quantityCell = newRow.insertCell(1);
-    let priceCell = newRow.insertCell(2);
-    let subtotalCell = newRow.insertCell(3);
-    let actionsCell = newRow.insertCell(4);
-
-    productCell.innerHTML = '<input type="text" id="product' + rowCount + '">';
-    quantityCell.innerHTML = '<input type="number" id="quantity' + rowCount + '" onchange="calculateSubtotal(' + rowCount + ')">';
-    priceCell.innerHTML = '<input type="number" id="price' + rowCount + '" onchange="calculateSubtotal(' + rowCount + ')">';
-    subtotalCell.innerHTML = '<span id="subtotal' + rowCount + '">0</span>';
-    actionsCell.innerHTML = '<button onclick="deleteRow(' + rowCount + ')">Eliminar</button>';
-
-    rowCount++;
-}
-
-function calculateSubtotal(row) {
-    let quantity = parseFloat(document.getElementById("quantity" + row).value);
-    let price = parseFloat(document.getElementById("price" + row).value);
-    let subtotal = quantity * price;
-    document.getElementById("subtotal" + row).textContent = subtotal.toFixed(2);
-    calculateTotal();
+function calculateSubtotal() {
+    let tempQuantity = parseFloat(quantityObject.value);
+    let tempPrice = parseFloat(priceObject.value);
+    let tempSubtotal = tempQuantity * tempPrice;
+    if (tempQuantity > 0 && tempPrice > 0) {
+        subtotalObject.innerHTML = tempSubtotal.toFixed(2);
+        calculateTotal();
+    }
 }
 
 function calculateTotal() {
-    let subtotals = document.querySelectorAll("[id^='total']");
-    let total = 0;
-    subtotals.forEach(function(subtotal) {
-        total += parseFloat(subtotal.textContent);
-    });
-    totalElement.textContent = total.toFixed(2);
+    let tempType = parseInt(typeObject.value);
+    let tempTotal = parseFloat(subtotalObject.textContent);
+    if (tempType === 2) {
+        tempTotal *= -1;
+    }
+    totalObject.innerHTML = tempTotal.toFixed(2);
 }
 
-function deleteRow(row) {
-    document.getElementById("row" + row).remove();
-    calculateTotal();
+function save() {
+    let type = parseInt(typeObject.value);
+    let product = parseInt(productObject.value);
+    let quantity = parseFloat(quantityObject.value);
+    let price = parseFloat(priceObject.value);
+    let subtotal = parseFloat(subtotalObject.value);
+    let observations = observationsObject.value;
+    let total = parseInt(totalObject.value);
+
+    if (type > 0 && product > 0 && quantity > 0 && price > 0) {
+        let data = {
+            type: type,
+            product: product,
+            quantity: quantity,
+            price: price,
+            subtotal: subtotal,
+            observations: observations,
+            total: total
+        };
+
+        let jsonData = JSON.stringify(data);
+
+        console.log(jsonData);
+
+        $.ajax({
+            type: 'POST',
+            url: '/transactions/save',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
+                console.log(response);
+            },
+        });
+    } else {
+         alert ("Error. Missing Data. \n " +
+            "Type, Product and Quantity must be filled.");
+    }
+
 }
+
+
+
+
+
