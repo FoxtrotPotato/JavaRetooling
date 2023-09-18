@@ -3,19 +3,21 @@ package com.foxtrotpotato.chickentest.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="transaction_details")
+@Table(name = "transaction_details")
 public class TransactionDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="transaction_details_id")
+    @Column(name = "transaction_details_id")
     private int transactionDetailsId;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="quantity")
-    private String quantity;
+    @Column(name = "quantity")
+    private int quantity;
 
-    @Column(name="subtotal")
-    private Float transactionTotal;
+    @Column(name = "price")
+    private float price;
+
+    @Column(name = "subtotal")
+    private float subtotal;
 
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "product_id")
@@ -25,11 +27,13 @@ public class TransactionDetail {
     @JoinColumn(name = "transaction_id")
     private Transaction transaction;
 
-    public TransactionDetail(){}
+    public TransactionDetail() {
+    }
 
-    public TransactionDetail(String quantity, Float transactionTotal) {
+    public TransactionDetail(int quantity, float subtotal, float price) {
         this.quantity = quantity;
-        this.transactionTotal = transactionTotal;
+        this.subtotal = subtotal;
+        this.price = price;
     }
 
     public int getTransactionDetailsId() {
@@ -40,20 +44,28 @@ public class TransactionDetail {
         this.transactionDetailsId = transactionDetailsId;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public Float getTransactionTotal() {
-        return transactionTotal;
+    public float getPrice() {
+        return price;
     }
 
-    public void setTransactionTotal(Float transactionTotal) {
-        this.transactionTotal = transactionTotal;
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public float getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(float transactionTotal) {
+        this.subtotal = transactionTotal;
     }
 
     public Product getProduct() {
@@ -77,9 +89,10 @@ public class TransactionDetail {
         return "TransactionDetail{" +
                 "transactionDetailsId=" + transactionDetailsId +
                 ", quantity='" + quantity + '\'' +
-                ", transactionTotal=" + transactionTotal +
+                ", transactionTotal=" + subtotal +
                 ", product=" + product +
                 ", transaction=" + transaction +
                 '}';
     }
+
 }

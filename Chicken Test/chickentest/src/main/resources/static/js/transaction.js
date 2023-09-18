@@ -5,11 +5,31 @@ let priceObject = document.getElementById("price");
 let subtotalObject = document.getElementById("subtotal");
 let observationsObject = document.getElementById("observations");
 let totalObject = document.getElementById("total");
+let csrfToken;
+let csrfHeader;
 
 typeObject.addEventListener("change", calculateSubtotal);
 quantityObject.addEventListener("change", calculateSubtotal);
 priceObject.addEventListener("change", calculateSubtotal);
 document.getElementById("save").addEventListener("click", save);
+
+
+function configureCsrfToken() {
+//    let header = $("meta[name='_csrf_header']").attr("content");
+//    csrfToken = $("meta[name='_csrf']").attr("content");
+
+     csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
+     csrfHeader = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
+
+
+    console.log(csrfToken + ", " + csrfHeader);
+
+    $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(csrfHeader, csrfToken);
+    });
+}
+
+configureCsrfToken();
 
 function calculateSubtotal() {
     let tempQuantity = parseFloat(quantityObject.value);
@@ -35,9 +55,9 @@ function save() {
     let product = parseInt(productObject.value);
     let quantity = parseFloat(quantityObject.value);
     let price = parseFloat(priceObject.value);
-    let subtotal = parseFloat(subtotalObject.value);
     let observations = observationsObject.value;
-    let total = parseInt(totalObject.value);
+    let subTotal = parseFloat(subtotalObject.textContent);
+    let total = parseFloat(totalObject.textContent);
 
     if (type > 0 && product > 0 && quantity > 0 && price > 0) {
         let data = {
@@ -45,9 +65,9 @@ function save() {
             product: product,
             quantity: quantity,
             price: price,
-            subtotal: subtotal,
-            observations: observations,
-            total: total
+            subtotal: subTotal,
+            total: total,
+            observations: observations
         };
 
         let jsonData = JSON.stringify(data);
@@ -56,15 +76,19 @@ function save() {
 
         $.ajax({
             type: 'POST',
-            url: '/transactions/save',
+            url: '/api/transactions/save',
             contentType: 'application/json',
             data: JSON.stringify(data),
+            headers: {'X-CSRF-TOKEN': csrfToken},
             success: function (response) {
-                console.log(response);
+          //      window.location.href = '/transactions/list';
             },
+            error: function (xhr, status, error) {
+                console.log("Error en la solicitud AJAX:", error);
+            }
         });
     } else {
-         alert ("Error. Missing Data. \n " +
+        alert("Error. Missing Data. \n " +
             "Type, Product and Quantity must be filled.");
     }
 

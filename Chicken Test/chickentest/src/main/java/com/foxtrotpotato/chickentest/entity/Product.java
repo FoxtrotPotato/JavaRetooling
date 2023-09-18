@@ -18,7 +18,7 @@ public class Product {
     private float productValue;
 
     @Column(name="product_stock")
-    private float productStock;
+    private int productStock;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "farm_id")
@@ -26,7 +26,7 @@ public class Product {
 
     public Product(){}
 
-    public Product(String productName, float productValue, float productStock) {
+    public Product(String productName, float productValue, int productStock) {
         this.productName = productName;
         this.productValue = productValue;
         this.productStock = productStock;
@@ -60,7 +60,7 @@ public class Product {
         return productStock;
     }
 
-    public void setProductStock(float productStock) {
+    public void setProductStock(int productStock) {
         this.productStock = productStock;
     }
 
