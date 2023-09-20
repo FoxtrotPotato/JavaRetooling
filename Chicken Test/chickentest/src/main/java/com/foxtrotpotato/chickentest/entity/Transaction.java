@@ -7,32 +7,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="transactions")
+@Table(name = "transactions")
 public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="transaction_id")
+    @Column(name = "transaction_id")
     private int transactionId;
 
-    @Column(name="transaction_date")
+    @Column(name = "transaction_date")
     private LocalDateTime transactionDate;
 
-    @Column(name="transaction_total")
+    @Column(name = "transaction_total")
     private Float transactionTotal;
 
-    @Column(name="transaction_observations")
+    @Column(name = "transaction_observations")
     private String transactionObservations;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "farm_id")
     private Farm farm;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "transaction_id")
-    private List<TransactionDetail> transactionDetails;
+    private TransactionDetail transactionDetail;
 
-    public Transaction(){}
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "transaction_id")
+    private Balance balance;
+
+    public Transaction() {
+    }
 
     public Transaction(LocalDateTime transactionDate, Float transactionTotal, String transactionObservations) {
         this.transactionDate = transactionDate;
@@ -80,19 +85,20 @@ public class Transaction {
         this.farm = farm;
     }
 
-    public List<TransactionDetail> getTransactionDetails() {
-        return transactionDetails;
+    public TransactionDetail getTransactionDetail() {
+        return transactionDetail;
     }
 
-    public void setTransactionDetails(List<TransactionDetail> transactionDetails) {
-        this.transactionDetails = transactionDetails;
+    public void setTransactionDetail(TransactionDetail transactionDetail) {
+        this.transactionDetail = transactionDetail;
     }
 
-    public void addTransactionDetails(TransactionDetail theTransactionDetail) {
-        if (transactionDetails == null) {
-            transactionDetails = new ArrayList<>();
-        }
-        transactionDetails.add(theTransactionDetail);
+    public Balance getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Balance balance) {
+        this.balance = balance;
     }
 
     @Override
@@ -102,10 +108,10 @@ public class Transaction {
                 ", transactionDate='" + transactionDate + '\'' +
                 ", transactionTotal=" + transactionTotal +
                 ", transactionObservation='" + transactionObservations + '\'' +
-                ", farm=" + farm +
-                ", transactionDetails=" + transactionDetails +
                 '}';
     }
+
+
 }
 
 

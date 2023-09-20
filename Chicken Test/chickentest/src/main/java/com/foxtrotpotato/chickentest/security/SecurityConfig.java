@@ -2,8 +2,10 @@ package com.foxtrotpotato.chickentest.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -49,9 +51,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(configurer ->
-                configurer
-/*                        .requestMatchers("/").hasRole("EMPLOYEE")
+        http.authorizeRequests(authorizeRequests ->
+                        authorizeRequests
+                        .requestMatchers("/").hasRole("EMPLOYEE")
 
                         .requestMatchers(HttpMethod.GET, "/balances/**").hasAuthority("MANAGER")
                         .requestMatchers(HttpMethod.POST, "/balances/**").hasAuthority("EMPLOYEE")
@@ -87,11 +89,12 @@ public class SecurityConfig {
 
                         .requestMatchers("/", "/index.html", "/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
-*/
-                        .anyRequest().permitAll()
-        );
 
-        http.httpBasic(withDefaults());
+                        //.anyRequest().permitAll()
+        ).formLogin(withDefaults());
+
+
+        //http.httpBasic(withDefaults());
         return http.build();
     }
 

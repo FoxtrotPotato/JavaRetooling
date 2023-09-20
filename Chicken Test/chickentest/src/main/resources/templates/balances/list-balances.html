@@ -26,8 +26,9 @@
 			<tr>
 				<th>#</th>
 				<th>Type</th>
-				<th>Total</th>
-				<th>Transaction Id</th>
+				<th>Amount</th>
+				<th>Balance</th>
+				<th>Transaction</th>
 			</tr>
 		</thead>
 
@@ -35,11 +36,9 @@
 			<tr th:each="tempBalance : ${balances}">
 				<td th:text="${tempBalance.balanceId}" />
 				<td th:text="${tempBalance.balanceType}" />
+				<td th:text="${tempBalance.transaction.getTransactionTotal()}" />
 				<td th:text="${tempBalance.balanceTotal}" />
 				<td th:text="${tempBalance.transaction}" />
-				<td>
-					<a th:href="@{/balances/showUpdateBalanceForm(balanceId=${tempBalance.balanceId})}" class = "btn btn-info btn-sm">Add Details</a>
-				</td>
 			</tr>
 		</tbody>
 	</table>

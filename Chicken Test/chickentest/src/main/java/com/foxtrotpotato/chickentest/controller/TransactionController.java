@@ -1,6 +1,8 @@
 package com.foxtrotpotato.chickentest.controller;
 
 import com.foxtrotpotato.chickentest.entity.Transaction;
+import com.foxtrotpotato.chickentest.entity.TransactionDetail;
+import com.foxtrotpotato.chickentest.service.TransactionDetailService;
 import com.foxtrotpotato.chickentest.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,18 +16,23 @@ import java.util.List;
 public class TransactionController {
 
     private TransactionService transactionService;
+    private TransactionDetailService transactionDetailService;
 
     @Autowired
-    public TransactionController(TransactionService theTransactionService) {
-        transactionService = theTransactionService;
+    public TransactionController(TransactionService theTransactionService,
+                                 TransactionDetailService theTransactionDetailService) {
+        this.transactionService = theTransactionService;
+        this.transactionDetailService = theTransactionDetailService;
     }
 
     @GetMapping("/list")
     public String listTransaction(Model theModel) {
 
         List<Transaction> theTransactions = transactionService.findAll();
-
         theModel.addAttribute("transactions", theTransactions);
+
+        List<TransactionDetail> theTransactionDetails = transactionDetailService.findAll();
+        theModel.addAttribute("transactionDetails", theTransactionDetails);
 
         return "transactions/list-transactions";
     }
@@ -38,15 +45,5 @@ public class TransactionController {
 
         return "transactions/transaction-form";
     }
-
-    @GetMapping("/showTransactionDetails")
-    public String showFormForUpdate(@RequestParam("transactionId") int theId, Model theModel) {
-
-        Transaction theTransaction = transactionService.findById(theId);
-        theModel.addAttribute("transaction", theTransaction);
-
-        return "transactions/transaction-details";
-    }
-
 
 }

@@ -23,16 +23,31 @@
     </div>
 
     <div class="container">
+        <h3>Directories</h3>
         <a href="/balances/list" class="btn btn-primary btn-sm mb-3">Balances</a>
-        <a href="/chickens/list" class="btn btn-primary btn-sm mb-3">Chickens</a>
-        <a href="/eggs/list" class="btn btn-primary btn-sm mb-3">Eggs</a>
-        <a href="/farms/list" class="btn btn-primary btn-sm mb-3">Farms</a>
+        <a href="/chickens/list" class="btn btn-warning btn-sm mb-3">Chickens</a>
+        <a href="/eggs/list" class="btn btn-warning btn-sm mb-3">Eggs</a>
+        <a href="/farms/list" class="btn btn-danger btn-sm mb-3">Farms</a>
         <a href="/logs/list" class="btn btn-danger btn-sm mb-3 ">Logs</a>
         <a href="/parameters/list" class="btn btn-primary btn-sm mb-3">Parameters</a>
         <a href="/products/list" class="btn btn-primary btn-sm mb-3">Products</a>
-        <a href="/transactions/list" class="btn btn-danger btn-sm mb-3">Transactions</a>
+        <a href="/transactions/list" class="btn btn-primary btn-sm mb-3">Transactions</a>
         <a href="/users/list" class="btn btn-primary btn-sm mb-3">Users</a>
+        <hr>
     </div>
+
+    <div class="container">
+        <h3>Add Items</h3>
+        <a th:href="@{/transactions/showAddTransactionForm}" class="btn btn-primary btn-sm mb-3">New Transaction</a>
+        <br>
+        <a th:href="@{/users/showAddUserForm}" class = "btn btn-primary btn-sm mb-3">Add User</a>
+        <a ID="addEggButton" class = "btn btn-danger btn-sm mb-3">Add Egg</a>
+        <a th:href="@{/chickens/showAddChickenForm}" class = "btn btn-primary btn-sm mb-3">Add Chicken</a>
+        <a ID="addChickenButton" class = "btn btn-danger btn-sm mb-3">Add Chicken (rest)</a>
+        <a th:href="@{/parameters/showAddParameterForm}" class = "btn btn-primary btn-sm mb-3">Add Parameter</a>
+        <hr>
+    </div>
+
 </body>
 </html>
 

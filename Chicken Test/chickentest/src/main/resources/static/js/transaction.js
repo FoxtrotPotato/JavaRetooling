@@ -81,7 +81,9 @@ function save() {
             data: JSON.stringify(data),
             headers: {'X-CSRF-TOKEN': csrfToken},
             success: function (response) {
-          //      window.location.href = '/transactions/list';
+                window.location.href = '/transactions/list';
+                console.log("I SEE THIS AS AN ABSOLUTE WIN");
+
             },
             error: function (xhr, status, error) {
                 console.log("Error en la solicitud AJAX:", error);

@@ -1,7 +1,6 @@
 package com.foxtrotpotato.chickentest.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.engine.transaction.internal.TransactionImpl;
 
 @Entity
 @Table(name="balances")
@@ -18,9 +17,6 @@ public class Balance {
     @Column(name="balance_total")
     private Float balanceTotal;
 
-    @Column(name="balance_observations")
-    private String balanceObservation;
-
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "farm_id")
     private Farm farm;
@@ -34,7 +30,6 @@ public class Balance {
     public Balance(String balanceType, Float balanceTotal, String balanceObservation) {
         this.balanceType = balanceType;
         this.balanceTotal = balanceTotal;
-        this.balanceObservation = balanceObservation;
     }
 
     public int getBalanceId() {
@@ -61,14 +56,6 @@ public class Balance {
         this.balanceTotal = balanceTotal;
     }
 
-    public String getBalanceObservation() {
-        return balanceObservation;
-    }
-
-    public void setBalanceObservation(String balanceObservation) {
-        this.balanceObservation = balanceObservation;
-    }
-
     public Farm getFarm() {
         return farm;
     }
@@ -91,7 +78,6 @@ public class Balance {
                 "balanceId=" + balanceId +
                 ", balanceType='" + balanceType + '\'' +
                 ", balanceTotal=" + balanceTotal +
-                ", balanceObservation='" + balanceObservation + '\'' +
                 ", farm=" + farm +
                 ", transaction=" + transaction +
                 '}';

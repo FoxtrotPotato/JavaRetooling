@@ -23,7 +23,7 @@ public class TransactionDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "transaction_id")
     private Transaction transaction;
 
@@ -90,8 +90,8 @@ public class TransactionDetail {
                 "transactionDetailsId=" + transactionDetailsId +
                 ", quantity='" + quantity + '\'' +
                 ", transactionTotal=" + subtotal +
-                ", product=" + product +
-                ", transaction=" + transaction +
+                ", product=" + product.getProductName() +
+                ", transaction=" + transaction.getTransactionId() +
                 '}';
     }
 
