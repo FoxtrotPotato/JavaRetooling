@@ -39,10 +39,11 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(LocalDateTime transactionDate, Float transactionTotal, String transactionObservations) {
+    public Transaction(LocalDateTime transactionDate, Float transactionTotal, String transactionObservations, Farm farm) {
         this.transactionDate = transactionDate;
         this.transactionTotal = transactionTotal;
         this.transactionObservations = transactionObservations;
+        this.farm = farm;
     }
 
     public int getTransactionId() {

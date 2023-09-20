@@ -16,10 +16,9 @@
 <body>
 
 <div class="container">
+	<br>
 	<h3>Parameter Directory</h3>
 	<hr>
-
-	<a th:href="@{/parameters/showAddParameterForm}" class = "btn btn-primary btn-sm mb-3">Add Parameter</a>
 
 	<table class="table table-bordered table-striped">
 		<thead class="table-dark">
@@ -39,8 +38,6 @@
 				<td th:text="${tempParameter.parameterValue}" />
                 <td>
 					<a th:href="@{/parameters/showUpdateParameterForm(parameterId=${tempParameter.parameterId})}" class = "btn btn-info btn-sm">Update</a>
-					<a th:href="@{/parameters/delete(parameterId=${tempParameter.ParameterId})}" class = "btn btn-danger btn-sm"
-					   onclick="if(!(confirm('Are you sure you want to delete this Parameter?'))) return false">Delete</a>
 				</td>
 			</tr>
 		</tbody>

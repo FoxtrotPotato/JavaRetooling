@@ -1,6 +1,8 @@
 package com.foxtrotpotato.chickentest.service;
 
 import com.foxtrotpotato.chickentest.entity.Egg;
+import com.foxtrotpotato.chickentest.entity.Farm;
+import com.foxtrotpotato.chickentest.entity.Product;
 
 import java.util.List;
 
@@ -14,4 +16,6 @@ public interface EggService {
     void deleteById(int theId);
 
     int calculateEggAgeInDays(int theId);
+
+    void createDeleteEggs(String balanceType, int quantity, Product product, Farm farm);
 }

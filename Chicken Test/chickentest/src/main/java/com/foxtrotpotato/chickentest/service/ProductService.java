@@ -1,6 +1,7 @@
 package com.foxtrotpotato.chickentest.service;
 
 import com.foxtrotpotato.chickentest.entity.Product;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ public interface ProductService {
     void save(Product theUser);
 
     void deleteById(int theId);
+
+    ResponseEntity updateStock(String balanceType, int productId, int quantity, int maxCapacity);
 }

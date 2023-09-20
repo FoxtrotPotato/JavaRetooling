@@ -20,7 +20,7 @@ public class ParameterServiceImpl implements ParameterService {
 
     @Override
     public List<Parameter> findAll() {
-        return parameterRepository.findAllByOrderByParameterIdDesc();
+        return parameterRepository.findAllByOrderByParameterIdAsc();
     }
 
     @Override

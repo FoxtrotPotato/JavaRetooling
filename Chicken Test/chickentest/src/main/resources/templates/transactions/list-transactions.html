@@ -39,7 +39,7 @@
         <tbody>
         <tr th:each="tempTransactionDetail : ${transactionDetails}">
             <td th:text="${tempTransactionDetail.transaction.transactionId}"/>
-            <td th:text="${tempTransactionDetail.transaction.balance.balanceType == 'IN' ? 'Sale' : 'Purchase'}" />
+            <td th:text="${tempTransactionDetail.transaction.balance.balanceType}" />
             <td th:text="${tempTransactionDetail.transaction.transactionDate}"/>
             <td th:text="${tempTransactionDetail.product.productName}"/>
             <td th:text="${tempTransactionDetail.quantity}"/>

@@ -42,16 +42,16 @@ function calculateSubtotal() {
 }
 
 function calculateTotal() {
-    let tempType = parseInt(typeObject.value);
+    let tempType = typeObject.value;
     let tempTotal = parseFloat(subtotalObject.textContent);
-    if (tempType === 2) {
+    if (tempType === "PURCHASE") {
         tempTotal *= -1;
     }
     totalObject.innerHTML = tempTotal.toFixed(2);
 }
 
 function save() {
-    let type = parseInt(typeObject.value);
+    let type = typeObject.value;
     let product = parseInt(productObject.value);
     let quantity = parseFloat(quantityObject.value);
     let price = parseFloat(priceObject.value);

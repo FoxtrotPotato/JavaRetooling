@@ -2,6 +2,8 @@ package com.foxtrotpotato.chickentest.service;
 
 import com.foxtrotpotato.chickentest.dao.EggRepository;
 import com.foxtrotpotato.chickentest.entity.Egg;
+import com.foxtrotpotato.chickentest.entity.Farm;
+import com.foxtrotpotato.chickentest.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,5 +71,25 @@ public class EggServiceImpl implements EggService {
         eggRepository.deleteById(theId);
     }
 
+    @Override
+    public void createDeleteEggs(String balanceType, int quantity, Product product, Farm farm) {
+        if (balanceType.equals("SALE")) {
+            for (int i = 0; i < quantity; i++) {
+                List<Egg> eggsList = findAll();
+                Egg oldestEgg = eggsList.get(0);
+                int oldestEggId = oldestEgg.getEggId();
+                deleteById(oldestEggId);
+                System.out.println("deleted egg: " + oldestEggId);
+            }
+        } else {
+            for (int i = 0; i < quantity; i++) {
+                Egg theEgg = new Egg();
+                theEgg.setEggBirthDay(LocalDate.now());
+                theEgg.setProduct(product);
+                theEgg.setFarm(farm);
+                save(theEgg);
+            }
+        }
+    }
 
 }

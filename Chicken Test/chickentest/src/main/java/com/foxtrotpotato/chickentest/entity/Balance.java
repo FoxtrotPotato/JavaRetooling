@@ -27,9 +27,11 @@ public class Balance {
 
     public Balance(){}
 
-    public Balance(String balanceType, Float balanceTotal, String balanceObservation) {
+    public Balance(String balanceType, Float balanceTotal, Transaction transaction, Farm farm) {
         this.balanceType = balanceType;
         this.balanceTotal = balanceTotal;
+        this.transaction = transaction;
+        this.farm = farm;
     }
 
     public int getBalanceId() {

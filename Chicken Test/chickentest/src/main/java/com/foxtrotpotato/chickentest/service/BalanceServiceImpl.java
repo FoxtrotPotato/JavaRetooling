@@ -44,4 +44,16 @@ public class BalanceServiceImpl implements BalanceService{
         balanceRepository.save(theBalance);
     }
 
+    @Override
+    public Float getLastBalance(){
+        float lastBalance;
+        List<Balance> balanceList = findAll();
+        if (!balanceList.isEmpty()) {
+            Balance tempBalance = balanceList.get(0);
+            lastBalance = tempBalance.getBalanceTotal();
+        } else {
+            lastBalance = 0f;
+        }
+        return lastBalance;
+    }
 }

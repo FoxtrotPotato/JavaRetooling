@@ -12,4 +12,5 @@ public interface BalanceService {
 
     void save(Balance theBalance);
 
+    Float getLastBalance();
 }

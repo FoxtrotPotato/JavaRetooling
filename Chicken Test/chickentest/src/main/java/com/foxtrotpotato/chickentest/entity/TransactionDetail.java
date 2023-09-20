@@ -30,10 +30,12 @@ public class TransactionDetail {
     public TransactionDetail() {
     }
 
-    public TransactionDetail(int quantity, float subtotal, float price) {
+    public TransactionDetail(Product product, int quantity, float price, float subtotal, Transaction transaction) {
+        this.product = product;
         this.quantity = quantity;
-        this.subtotal = subtotal;
         this.price = price;
+        this.subtotal = subtotal;
+        this.transaction = transaction;
     }
 
     public int getTransactionDetailsId() {

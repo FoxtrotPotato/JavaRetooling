@@ -1,4 +1,4 @@
-package com.foxtrotpotato.chickentest.rest;
+package com.foxtrotpotato.chickentest.rest.restservice;
 
 import com.foxtrotpotato.chickentest.entity.*;
 import com.foxtrotpotato.chickentest.service.*;
@@ -7,19 +7,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
-@RestController
-@RequestMapping("api/transactions")
-public class TransactionRestController {
+import static org.springframework.http.ResponseEntity.status;
+
+@Service
+public abstract class TransactionRestServiceImpl implements TransactionRestService {
+/*
     private final TransactionService transactionService;
     private final ProductService productService;
     private final BalanceService balanceService;
@@ -27,15 +25,17 @@ public class TransactionRestController {
     private final ChickenService chickenService;
     private final TransactionDetailService transactionDetailService;
     private final UserService userService;
+    private final ParameterService parameterService;
 
     @Autowired
-    public TransactionRestController(TransactionService transactionService,
-                                     TransactionDetailService transactionDetailService,
-                                     ProductService productService,
-                                     BalanceService balanceService,
-                                     EggService eggService,
-                                     ChickenService chickenService,
-                                     UserService userService) {
+    public TransactionRestServiceImpl(TransactionService transactionService,
+                                      TransactionDetailService transactionDetailService,
+                                      ProductService productService,
+                                      BalanceService balanceService,
+                                      EggService eggService,
+                                      ChickenService chickenService,
+                                      UserService userService,
+                                      ParameterService parameterService) {
         this.transactionService = transactionService;
         this.transactionDetailService = transactionDetailService;
         this.productService = productService;
@@ -43,13 +43,16 @@ public class TransactionRestController {
         this.chickenService = chickenService;
         this.eggService = eggService;
         this.userService = userService;
+        this.parameterService = parameterService;
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<String> saveTransaction(@RequestBody Map<String, Object> json) {
+    @Override
+    public ResponseEntity save(Object json) {
         System.out.println("begin");
+        ResponseEntity response = new ResponseEntity();
         try {
             System.out.println(json);
+            int excess;
 
             // get user's farm
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -65,7 +68,7 @@ public class TransactionRestController {
 
                 theFarm = theUser.getFarm();
                 System.out.println(theFarm);
-            }else {
+            } else {
                 System.out.println("No authenticated user.");
             }
 
@@ -88,6 +91,9 @@ public class TransactionRestController {
                     "total " + total + "\n" +
                     "date " + date + "};");
 
+            // get farm parameters
+            int maxCapacity = parameterService.findById(productId).getParameterValue();
+
             // Prepare Product
             Product theProduct = productService.findById(productId);
             System.out.println("control");
@@ -98,10 +104,17 @@ public class TransactionRestController {
                 if (tempStock >= quantity) {
                     tempStock = tempStock - quantity;
                 } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No hay suficiente stock disponible para esta transacción.");
+                    response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No hay suficiente stock disponible para esta transacción.");
+                    return response;
                 }
             } else {
                 tempStock = tempStock + quantity;
+
+                if (tempStock > maxCapacity) {
+                    excess = tempStock - maxCapacity;
+                    tempStock = tempStock - excess;
+                    // manage excess (to be created)
+                }
             }
 
             theProduct.setProductStock(tempStock);
@@ -200,11 +213,14 @@ public class TransactionRestController {
                 }
             }
 
+            response = ResponseEntity.ok("Los datos se han enviado correctamente.");
 
-            return ResponseEntity.ok("Los datos se han enviado correctamente.");
+
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ha ocurrido un error al guardar los datos.");
+            response = status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ha ocurrido un error al guardar los datos.");
         }
+        return response;
     }
 
+*/
 }

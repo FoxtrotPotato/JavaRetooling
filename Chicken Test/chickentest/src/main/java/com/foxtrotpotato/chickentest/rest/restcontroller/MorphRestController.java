@@ -1,4 +1,4 @@
-package com.foxtrotpotato.chickentest.rest;
+package com.foxtrotpotato.chickentest.rest.restcontroller;
 
 import com.foxtrotpotato.chickentest.entity.Chicken;
 import com.foxtrotpotato.chickentest.service.ChickenService;
@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/api/chickens")
-public class ChickenRestController {
+@RequestMapping("/api/morph")
+public class MorphRestController {
 
     private ChickenService chickenService;
 
     @Autowired
-    public ChickenRestController(ChickenService theChickenService) {
+    public MorphRestController(ChickenService theChickenService) {
         chickenService = theChickenService;
     }
 

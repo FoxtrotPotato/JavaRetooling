@@ -2,6 +2,8 @@ package com.foxtrotpotato.chickentest.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name="farms")
 public class Farm {
@@ -13,6 +15,9 @@ public class Farm {
 
     @Column(name="farm_name")
     private String farmName;
+
+    @OneToMany(mappedBy = "farm")
+    private List<User> users;
 
     public Farm(){}
 
@@ -36,6 +41,14 @@ public class Farm {
         this.farmName = farmName;
     }
 
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
     @Override
     public String toString() {
         return "Farm{" +
@@ -43,4 +56,5 @@ public class Farm {
                 ", farmName='" + farmName + '\'' +
                 '}';
     }
+
 }
