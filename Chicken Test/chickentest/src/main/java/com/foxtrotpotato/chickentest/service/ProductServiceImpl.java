@@ -33,8 +33,7 @@ public class ProductServiceImpl implements ProductService {
 
         if (result.isPresent()) {
             theProduct = result.get();
-        }
-        else {
+        } else {
             throw new RuntimeException("Did not find Product id - " + theId);
         }
 
@@ -52,19 +51,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity updateStock(String balanceType, int productId, int quantity, int maxCapacity){
+    public ResponseEntity updateStock(String balanceType, int productId, int quantity, int maxCapacity) {
         Product theProduct = findById(productId);
         int excess;
-        ResponseEntity response;
         int tempStock = (int) theProduct.getProductStock();
 
         System.out.println("tempstock: " + tempStock);
 
-        if (balanceType == "SALE") {
+        if (balanceType.equals("SALE")) {
             if (tempStock >= quantity) {
                 tempStock = tempStock - quantity;
             } else {
-                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No hay suficiente stock disponible para esta transacción.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not enough "+theProduct.getProductName()+"s stock available for the transaction.");
             }
         } else {
             tempStock = tempStock + quantity;
@@ -72,15 +70,27 @@ public class ProductServiceImpl implements ProductService {
             if (tempStock > maxCapacity) {
                 excess = tempStock - maxCapacity;
                 tempStock = tempStock - excess;
-                // manage excess (to be created)
+                theProduct.setProductStock(tempStock);
+                save(theProduct);
+                return ResponseEntity.ok("Product updated successfully. \n" +
+                         theProduct.getProductName() + "/s surplus sent to the nearest charity centre: " + excess);
             }
         }
 
         theProduct.setProductStock(tempStock);
         save(theProduct);
         System.out.println("product OK");
-        response = ResponseEntity.ok("Producto actualizado correctamente.");
-        return response;
+        return ResponseEntity.ok("Product updated successfully.");
+    }
+
+    @Override
+    public float getProductPrice(int productId) {
+        Optional<Product> theProduct = productRepository.findById(productId);
+        float price = 0f;
+        if (theProduct.isPresent()) {
+            price = theProduct.get().getProductValue();
+        }
+        return price;
     }
 
 }

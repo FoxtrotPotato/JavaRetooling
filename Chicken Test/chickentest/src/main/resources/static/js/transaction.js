@@ -8,6 +8,7 @@ let totalObject = document.getElementById("total");
 let csrfToken;
 let csrfHeader;
 
+productObject.addEventListener("change", getPrice);
 typeObject.addEventListener("change", calculateSubtotal);
 quantityObject.addEventListener("change", calculateSubtotal);
 priceObject.addEventListener("change", calculateSubtotal);
@@ -15,21 +16,37 @@ document.getElementById("save").addEventListener("click", save);
 
 
 function configureCsrfToken() {
-//    let header = $("meta[name='_csrf_header']").attr("content");
-//    csrfToken = $("meta[name='_csrf']").attr("content");
-
-     csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
-     csrfHeader = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
-
-
+    csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
+    csrfHeader = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
     console.log(csrfToken + ", " + csrfHeader);
 
-    $(document).ajaxSend(function (e, xhr, options) {
+    $(document).ajaxSend(function (e, xhr) {
         xhr.setRequestHeader(csrfHeader, csrfToken);
     });
 }
 
 configureCsrfToken();
+
+function getPrice() {
+    const theProductId = parseInt(productObject.value);
+    console.log(theProductId);
+
+    fetch(`/api/transactions/getPrice?productId=${theProductId}`)
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error("Network Error");
+            }
+            return response.json();
+        })
+        .then(function (data) {
+                const price = data;
+                console.log(price);
+                priceObject.value = parseFloat(price).toFixed(2);
+            }
+        ).catch(function (error) {
+        console.error(error)
+    });
+}
 
 function calculateSubtotal() {
     let tempQuantity = parseFloat(quantityObject.value);
@@ -42,7 +59,7 @@ function calculateSubtotal() {
 }
 
 function calculateTotal() {
-    let tempType = typeObject.value;
+    let tempType = typeObject.options[typeObject.selectedIndex].text;
     let tempTotal = parseFloat(subtotalObject.textContent);
     if (tempType === "PURCHASE") {
         tempTotal *= -1;
@@ -51,7 +68,7 @@ function calculateTotal() {
 }
 
 function save() {
-    let type = typeObject.value;
+    let type = typeObject.options[typeObject.selectedIndex].text;
     let product = parseInt(productObject.value);
     let quantity = parseFloat(quantityObject.value);
     let price = parseFloat(priceObject.value);
@@ -59,7 +76,7 @@ function save() {
     let subTotal = parseFloat(subtotalObject.textContent);
     let total = parseFloat(totalObject.textContent);
 
-    if (type > 0 && product > 0 && quantity > 0 && price > 0) {
+    if (type !== "" && product > 0 && quantity > 0 && price > 0) {
         let data = {
             type: type,
             product: product,
@@ -80,10 +97,9 @@ function save() {
             contentType: 'application/json',
             data: JSON.stringify(data),
             headers: {'X-CSRF-TOKEN': csrfToken},
-            success: function (response) {
+            success: function () {
                 window.location.href = '/transactions/list';
                 console.log("I SEE THIS AS AN ABSOLUTE WIN");
-
             },
             error: function (xhr, status, error) {
                 console.log("Error en la solicitud AJAX:", error);

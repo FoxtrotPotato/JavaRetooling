@@ -6,68 +6,91 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-
-	<title>Chicken Directory</title>
+    <title>Chicken Directory</title>
 </head>
 
 <body>
 
+<!-- menu-->
+<a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
+    Menu</a>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="d-grid gap-2">
+            <a href="/index" class="btn btn-success btn-lg mb-3" type="button">Home</a>
+            <a href="/balances/list" class="btn btn-primary btn-sm mb-3" type="button">Balances</a>
+            <a href="/chickens/list" class="btn btn-warning btn-sm mb-3" type="button">Chickens</a>
+            <a href="/eggs/list" class="btn btn-warning btn-sm mb-3" type="button">Eggs</a>
+            <a href="/farms/list" class="btn btn-danger btn-sm mb-3" type="button">Farms</a>
+            <a href="/logs/list" class="btn btn-danger btn-sm mb-3" type="button">Logs</a>
+            <a href="/parameters/list" class="btn btn-primary btn-sm mb-3" type="button">Parameters</a>
+            <a href="/products/list" class="btn btn-primary btn-sm mb-3" type="button">Products</a>
+            <a href="/transactions/list" class="btn btn-primary btn-sm mb-3" type="button">Transactions</a>
+            <a href="/users/list" class="btn btn-primary btn-sm mb-3" type="button">Users</a>
+        </div>
+    </div>
+</div>
 
+<!-- primary content -->
 <div class="container">
-	<br>
-	<h3>Chicken Directory</h3>
-	<hr>
+    <br>
+    <div class="container-fluid row">
+        <div class="col col-10">
+            <h3>Chicken Directory</h3>
+        </div>
+        <div class="col col-2">
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon2">Total</span>
+                <span type="number" th:text="${chickens.size()}" class="form-control col-2 md-2 text-end"
+                      readonly></span>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <br>
 
-	<a th:href="@{/chickens/showAddChickenForm}" class = "btn btn-primary btn-sm mb-3">Add Chicken</a>
-	<a ID="addChickenButton" class = "btn btn-danger btn-sm mb-3">Add Chicken (rest)</a>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Birthday</th>
+            <th>Age (days)</th>
+            <th>Action</th>
+        </tr>
+        </thead>
 
-	<table class="table table-bordered table-striped">
-		<thead class="table-dark">
-			<tr>
-				<th>#</th>
-				<th>Birthday</th>
-				<th>Age (days)</th>
-				<th>Action</th>
-			</tr>
-		</thead>
+        <tbody>
+        <tr th:each="tempChicken : ${chickens}">
 
-		<tbody>
-			<tr th:each="tempChicken : ${chickens}">
-
-				<td th:text="${#strings.arraySplit(tempChicken, ',')[0]}" />
-				<td th:text="${#strings.arraySplit(tempChicken, ',')[1]}" />
-				<td th:text="${#strings.arraySplit(tempChicken, ',')[2]}" />
-                <td>
-					<a th:href="@{/chickens/showUpdateChickenForm(chickenId=${#strings.arraySplit(tempChicken, ',')[0]})}" class = "btn btn-info btn-sm">Update</a>
-					<a th:href="@{/chickens/delete(chickenId=${#strings.arraySplit(tempChicken, ',')[0]})}" class = "btn btn-danger btn-sm"
-					   onclick="if(!(confirm('Are you sure you want to delete this Chicken?'))) return false">Delete</a>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+            <td th:text="${#strings.arraySplit(tempChicken, ',')[0]}"/>
+            <td th:text="${#strings.arraySplit(tempChicken, ',')[1]}"/>
+            <td th:text="${#strings.arraySplit(tempChicken, ',')[2]}"/>
+            <td>
+                <a th:href="@{/chickens/showUpdateChickenForm(chickenId=${#strings.arraySplit(tempChicken, ',')[0]})}"
+                   class="btn btn-info btn-sm">Update</a>
+                <a th:href="@{/chickens/delete(chickenId=${#strings.arraySplit(tempChicken, ',')[0]})}"
+                   class="btn btn-danger btn-sm"
+                   onclick="if(!(confirm('Are you sure you want to delete this Chicken?'))) return false">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
 </div>
 
 <footer class="help-footnote">
-	<hr>
-	<a th:href="@{/index.html}"> << Back to Homepage</a>
+    <hr>
+    <a th:href="@{https://www.linkedin.com/in/fedeperrone/}"> ChickenTest By: Federico Perrone. Accenture - 2023. </a>
 </footer>
-
-<script>
-	$(document).ready(function() {
-		$("#addChickenButton").click(function() {
-			$.ajax({
-				type: "POST",
-				url: "/api/chickens/add",
-				success: function(data) {window.location.reload();
-				}
-			});
-		});
-	});
-</script>
 
 </body>
 </html>

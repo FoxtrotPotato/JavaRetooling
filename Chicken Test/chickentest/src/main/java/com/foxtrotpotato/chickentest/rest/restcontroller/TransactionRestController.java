@@ -5,14 +5,9 @@ import com.foxtrotpotato.chickentest.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,7 +20,6 @@ public class TransactionRestController {
     private final EggService eggService;
     private final ChickenService chickenService;
     private final TransactionDetailService transactionDetailService;
-    private final UserService userService;
     private final ParameterService parameterService;
     private final FarmService farmService;
 
@@ -36,7 +30,6 @@ public class TransactionRestController {
                                      BalanceService balanceService,
                                      EggService eggService,
                                      ChickenService chickenService,
-                                     UserService userService,
                                      ParameterService parameterService,
                                      FarmService farmService) {
         this.transactionService = transactionService;
@@ -45,11 +38,14 @@ public class TransactionRestController {
         this.balanceService = balanceService;
         this.chickenService = chickenService;
         this.eggService = eggService;
-        this.userService = userService;
         this.parameterService = parameterService;
         this.farmService = farmService;
     }
 
+    @GetMapping("/getPrice")
+    public float getProductPrice(@RequestParam int productId) {
+        return productService.getProductPrice(productId);
+    }
 
     @PostMapping("/save")
     public ResponseEntity<String> saveTransaction(@RequestBody Map<String, Object> json) {
@@ -67,16 +63,6 @@ public class TransactionRestController {
             float subtotal = Float.parseFloat(String.valueOf(json.get("subtotal")));
             float total = Float.parseFloat(String.valueOf(json.get("total")));
             LocalDateTime date = LocalDateTime.now();
-
-            System.out.println("{ balanceType " + balanceType + "\n" +
-                    "product " + productId + "\n" +
-                    "quantity " + quantity + "\n" +
-                    "price " + price + "\n" +
-                    "observations " + observations + "\n" +
-                    "subtotal " + subtotal + "\n" +
-                    "total " + total + "\n" +
-                    "date " + date + "\n" +
-                    "};");
 
             Farm theFarm = farmService.getFarmByLoggedUser();
 

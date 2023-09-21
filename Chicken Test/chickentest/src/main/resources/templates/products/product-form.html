@@ -6,35 +6,62 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <title>Save Product</title>
 </head>
 
-    <body>
-        <div class="container">
-            <h3>Product Directory</h3>
-            <hr>
-            <p class="h4 mb-4">Save Product</p>
-            <form action="#" th:action="@{/products/save}" th:object="${product}" method="POST">
-                <input type="hidden" th:field="*{productId}">
-                <input type="text" th:field="*{productName}" class="form-control mb-4 w-25" placeholder="Name">
-                <input type="text" th:field="*{productValue}" class="form-control mb-4 w-25" placeholder="Value">
-                <input type="text" th:field="*{productStock}" class="form-control mb-4 w-25" placeholder="Stock">
-                <button type="submit" class="btn btn-info col-2">Save</button>
-            </form>
+<body>
+
+<!-- menu-->
+<a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
+    Menu</a>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="d-grid gap-2">
+            <a href="/index" class="btn btn-success btn-lg mb-3" type="button">Home</a>
+            <a href="/balances/list" class="btn btn-primary btn-sm mb-3" type="button">Balances</a>
+            <a href="/chickens/list" class="btn btn-warning btn-sm mb-3" type="button">Chickens</a>
+            <a href="/eggs/list" class="btn btn-warning btn-sm mb-3" type="button">Eggs</a>
+            <a href="/farms/list" class="btn btn-danger btn-sm mb-3" type="button">Farms</a>
+            <a href="/logs/list" class="btn btn-danger btn-sm mb-3" type="button">Logs</a>
+            <a href="/parameters/list" class="btn btn-primary btn-sm mb-3" type="button">Parameters</a>
+            <a href="/products/list" class="btn btn-primary btn-sm mb-3" type="button">Products</a>
+            <a href="/transactions/list" class="btn btn-primary btn-sm mb-3" type="button">Transactions</a>
+            <a href="/users/list" class="btn btn-primary btn-sm mb-3" type="button">Users</a>
         </div>
+    </div>
+</div>
 
-        <footer class="help-footnote">
-            <hr>
-            <a th:href="@{/products/list}">< Back to Products List</a>
-            <br>
-            <a th:href="@{/index.html}"> << Back to Homepage</a>
-        </footer>
 
-    </body>
+<div class="container">
+    <h3>Product Directory</h3>
+    <hr>
+    <p class="h4 mb-4">Save Product</p>
+    <form action="#" th:action="@{/products/save}" th:object="${product}" method="POST">
+        <input type="hidden" th:field="*{productId}">
+        <input type="text" th:field="*{productName}" class="form-control mb-4 w-25" placeholder="Name">
+        <input type="number" step="0.01" th:field="*{productValue}" class="form-control mb-4 w-25" placeholder="Value">
+        <input type="number" th:field="*{productStock}" class="form-control mb-4 w-25" placeholder="Stock">
+        <input type="hidden" th:field="*{farm.farmId}">
+        <input type="hidden" th:field="*{farm.farmName}">
+        <button type="submit" class="btn btn-info col-2">Save</button>
+    </form>
+</div>
+
+<footer class="help-footnote">
+    <hr>
+    <a th:href="@{https://www.linkedin.com/in/fedeperrone/}"> ChickenTest By: Federico Perrone. Accenture - 2023. </a>
+</footer>
+
+</body>
 
 </html>
 

@@ -52,45 +52,45 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests(authorizeRequests ->
-                        authorizeRequests
-                        .requestMatchers("/").hasRole("EMPLOYEE")
-
-                        .requestMatchers(HttpMethod.GET, "/balances/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.POST, "/balances/**").hasAuthority("EMPLOYEE")
-
-                        .requestMatchers("/chickens/**").hasAuthority("EMPLOYEE")
-                        .requestMatchers("/api/chickens/**").hasAuthority("EMPLOYEE")
-
-                        .requestMatchers("/eggs/**").hasAuthority("EMPLOYEE")
-
-                        .requestMatchers(HttpMethod.GET, "/farms/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.POST, "/farms/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/farms/**").hasAuthority("ADMIN")
-
-                        .requestMatchers(HttpMethod.GET, "/parameters/**").hasAuthority("EMPLOYEE")
-                        .requestMatchers(HttpMethod.POST, "/parameters/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "/parameters/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.DELETE, "/parameters/**").hasAuthority("MANAGER")
-
-                        .requestMatchers(HttpMethod.GET, "/products/**").hasAuthority("EMPLOYEE")
-                        .requestMatchers(HttpMethod.POST, "/products/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "/products/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.DELETE, "/products/**").hasAuthority("MANAGER")
-
-                        .requestMatchers(HttpMethod.GET, "/transactions/**").hasAuthority("EMPLOYEE")
-                        .requestMatchers(HttpMethod.POST, "/transactions/**").hasAuthority("EMPLOYEE")
-                        .requestMatchers(HttpMethod.PUT, "/transactions/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.DELETE, "/transactions/**").hasAuthority("ADMIN")
-
+                authorizeRequests
                         .requestMatchers(HttpMethod.GET, "/users/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/users/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/users/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("ADMIN")
 
+                        .requestMatchers(HttpMethod.POST, "/farms/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/farms/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/farms/**").hasAuthority("MANAGER")
+
+                        .requestMatchers(HttpMethod.PUT, "/transactions/**").hasAuthority("MANAGER")
+                        .requestMatchers(HttpMethod.GET, "/transactions/**").hasAuthority("EMPLOYEE")
+                        .requestMatchers(HttpMethod.POST, "/transactions/**").hasAuthority("EMPLOYEE")
+
+                        .requestMatchers(HttpMethod.GET, "/balances/**").hasAuthority("MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/balances/**").hasAuthority("EMPLOYEE")
+
+                        .requestMatchers(HttpMethod.POST, "/parameters/**").hasAuthority("MANAGER")
+                        .requestMatchers(HttpMethod.PUT, "/parameters/**").hasAuthority("MANAGER")
+                        .requestMatchers(HttpMethod.DELETE, "/parameters/**").hasAuthority("MANAGER")
+                        .requestMatchers(HttpMethod.GET, "/parameters/**").hasAuthority("EMPLOYEE")
+
+                        .requestMatchers(HttpMethod.POST, "/products/**").hasAuthority("MANAGER")
+                        .requestMatchers(HttpMethod.PUT, "/products/**").hasAuthority("MANAGER")
+                        .requestMatchers(HttpMethod.DELETE, "/products/**").hasAuthority("MANAGER")
+                        .requestMatchers(HttpMethod.GET, "/products/**").hasAuthority("EMPLOYEE")
+
+                        .requestMatchers(HttpMethod.GET, "/api/transactions/**").hasAuthority("EMPLOYEE")
+                        .requestMatchers(HttpMethod.POST, "/api/transactions/**").hasAuthority("EMPLOYEE")
+
+                        .requestMatchers("/chickens/**").hasAuthority("EMPLOYEE")
+
+                        .requestMatchers("/eggs/**").hasAuthority("EMPLOYEE")
+
+                        .requestMatchers("/").hasRole("EMPLOYEE")
+
                         .requestMatchers("/", "/index.html", "/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
 
-                        //.anyRequest().permitAll()
         ).formLogin(withDefaults());
 
 

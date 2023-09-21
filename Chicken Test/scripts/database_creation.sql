@@ -44,7 +44,7 @@ CREATE TABLE authorities (
 CREATE TABLE products (
   product_id INT NOT NULL AUTO_INCREMENT,
   product_name VARCHAR(45) NOT NULL,
-  product_value DECIMAL(8,2) NOT NULL,
+  product_value DECIMAL(14,2) NOT NULL,
   product_stock INT DEFAULT NULL,
   farm_id INT NOT NULL DEFAULT 1,
   PRIMARY KEY (product_id),

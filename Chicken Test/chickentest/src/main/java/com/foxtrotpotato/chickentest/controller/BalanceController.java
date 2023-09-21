@@ -23,21 +23,9 @@ public class BalanceController {
 
     @GetMapping("/list")
     public String listBalance(Model theModel) {
-
         List<Balance> theBalances = balanceService.findAll();
-
         theModel.addAttribute("balances", theBalances);
-
         return "balances/list-balances";
-    }
-
-    @GetMapping("/showUpdateBalanceForm")
-    public String showFormForUpdate(@RequestParam("balanceId") int theId, Model theModel) {
-
-        Balance theBalance = balanceService.findById(theId);
-        theModel.addAttribute("balance", theBalance);
-
-        return "balances/balance-form";
     }
 
     @PostMapping("/save")
