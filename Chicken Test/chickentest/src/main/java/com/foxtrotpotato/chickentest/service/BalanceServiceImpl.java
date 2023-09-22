@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BalanceServiceImpl implements BalanceService{
+public class BalanceServiceImpl implements BalanceService {
 
     private BalanceRepository balanceRepository;
 
@@ -31,8 +31,7 @@ public class BalanceServiceImpl implements BalanceService{
 
         if (result.isPresent()) {
             theBalance = result.get();
-        }
-        else {
+        } else {
             throw new RuntimeException("Did not find Balance id - " + theId);
         }
 
@@ -45,7 +44,7 @@ public class BalanceServiceImpl implements BalanceService{
     }
 
     @Override
-    public Float getLastBalance(){
+    public Float getLastBalance() {
         float lastBalance;
         List<Balance> balanceList = findAll();
         if (!balanceList.isEmpty()) {
@@ -56,4 +55,61 @@ public class BalanceServiceImpl implements BalanceService{
         }
         return lastBalance;
     }
+
+    @Override
+    public int countSalesBalances() {
+        int salesBalances = 0;
+        List<Balance> balanceList = findAll();
+        if (!balanceList.isEmpty()) {
+            for (Balance balance : balanceList) {
+                if (balance.getBalanceType().equals("SALE")){
+                    salesBalances++;
+                }
+            }
+        }
+        return salesBalances;
+    }
+
+    @Override
+    public int countPurchasesBalances() {
+        int purchasesBalances = 0;
+        List<Balance> balanceList = findAll();
+        if (!balanceList.isEmpty()) {
+            for (Balance balance : balanceList) {
+                if (balance.getBalanceType().equals("PURCHASE")){
+                    purchasesBalances++;
+                }
+            }
+        }
+        return purchasesBalances;
+    }
+
+    @Override
+    public Float sumSalesBalances() {
+        Float totalSales = 0f;
+        List<Balance> balanceList = findAll();
+        if (!balanceList.isEmpty()) {
+            for (Balance balance : balanceList) {
+                if (balance.getBalanceType().equals("SALE")){
+                    totalSales = totalSales + balance.getBalanceTotal();
+                }
+            }
+        }
+        return totalSales;
+    }
+
+    @Override
+    public Float sumPurchasesBalances() {
+        Float totalPurchases = 0f;
+        List<Balance> balanceList = findAll();
+        if (!balanceList.isEmpty()) {
+            for (Balance balance : balanceList) {
+                if (balance.getBalanceType().equals("PURCHASE")){
+                    totalPurchases = totalPurchases + balance.getBalanceTotal();
+                }
+            }
+        }
+        return totalPurchases;
+    }
+
 }

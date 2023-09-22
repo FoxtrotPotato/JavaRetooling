@@ -23,7 +23,6 @@ public class ProductController {
     @GetMapping("/list")
     public String listProduct(Model theModel) {
         List<Product> theProducts = productService.findAll();
-
         theModel.addAttribute("products", theProducts);
 
         return "Products/list-Products";
@@ -31,7 +30,6 @@ public class ProductController {
 
     @GetMapping("/showAddProductForm")
     public String showFormForAdd(Model theModel) {
-
         Product theProduct = new Product();
         theModel.addAttribute("product", theProduct);
 

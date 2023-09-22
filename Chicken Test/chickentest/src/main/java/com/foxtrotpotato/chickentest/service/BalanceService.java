@@ -13,4 +13,12 @@ public interface BalanceService {
     void save(Balance theBalance);
 
     Float getLastBalance();
+
+    int countSalesBalances();
+
+    int countPurchasesBalances();
+
+    Float sumPurchasesBalances();
+
+    Float sumSalesBalances();
 }
