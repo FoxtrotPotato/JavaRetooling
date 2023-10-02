@@ -15,7 +15,13 @@ public interface EggService {
 
     void deleteById(int theId);
 
+    void deleteList(List<Egg> eggsList);
+
     int calculateEggAgeInDays(int theId);
 
     void createDeleteEggs(String balanceType, int quantity, Product product, Farm farm);
+
+    List<Egg> checkBirthdays(int eggLifeSpan);
+
+
 }

@@ -16,8 +16,13 @@ public interface ChickenService {
 
     void deleteById(int theId);
 
+    void deleteList(List<Chicken> chickenList);
+
     int calculateChickenAgeInDays(int theId);
 
     void createDeleteChickens(String balanceType, int quantity, Product product, Farm farm);
+
+    List<Chicken> checkBirthdays(int chickenLifeSpan);
+
 
 }

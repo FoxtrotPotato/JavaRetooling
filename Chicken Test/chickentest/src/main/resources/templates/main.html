@@ -1,0 +1,242 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <title>Chicken Test</title>
+</head>
+
+<body>
+
+<!-- menu-->
+<a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
+    Menu</a>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="d-grid gap-2">
+            <a href="/index" class="btn btn-success btn-lg mb-3" type="button">Home</a>
+            <a href="/balances/list" class="btn btn-primary btn-sm mb-3" type="button">Balances</a>
+            <a href="/chickens/list" class="btn btn-warning btn-sm mb-3" type="button">Chickens</a>
+            <a href="/eggs/list" class="btn btn-warning btn-sm mb-3" type="button">Eggs</a>
+            <a href="/farms/list" class="btn btn-danger btn-sm mb-3" type="button">Farms</a>
+            <a href="/logs/list" class="btn btn-danger btn-sm mb-3" type="button">Logs</a>
+            <a href="/parameters/list" class="btn btn-primary btn-sm mb-3" type="button">Parameters</a>
+            <a href="/products/list" class="btn btn-primary btn-sm mb-3" type="button">Products</a>
+            <a href="/transactions/list" class="btn btn-primary btn-sm mb-3" type="button">Transactions</a>
+            <a href="/users/list" class="btn btn-primary btn-sm mb-3" type="button">Users</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="container-fluid row">
+        <div class="col col-7">
+            <h1 class="">Chicken Test</h1>
+        </div>
+        <div class="col 2">
+            <p>xx/xx/xxxx</p>
+        </div>
+        <div class="container col-3 align-content-end">
+            <a class="btn btn-info btn-sm" >Advance 1 day ></a>
+            <a class="btn btn-info btn-sm" >Advance 30 days >></a>
+        </div>
+
+    </div>
+    <hr>
+
+    <div class="container">
+        <a href="/balances/list" class="btn btn-primary btn-sm mb-3">Balances</a>
+        <a href="/chickens/list" class="btn btn-warning btn-sm mb-3">Chickens</a>
+        <a href="/eggs/list" class="btn btn-warning btn-sm mb-3">Eggs</a>
+        <a href="/farms/list" class="btn btn-danger btn-sm mb-3">Farms</a>
+        <a href="/logs/list" class="btn btn-danger btn-sm mb-3 ">Logs</a>
+        <a href="/parameters/list" class="btn btn-primary btn-sm mb-3">Parameters</a>
+        <a href="/products/list" class="btn btn-primary btn-sm mb-3">Products</a>
+        <a href="/transactions/list" class="btn btn-primary btn-sm mb-3">Transactions</a>
+        <a href="/users/list" class="btn btn-primary btn-sm mb-3">Users</a>
+        <hr>
+    </div>
+
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-1 g-4">
+            <div class="col">
+                <div class="card h-100">
+                    <h4 class="card-header">Balance / Operations</h4>
+                    <div class="card-body row row-cols-1 row-cols-md-3 g-4">
+                        <div class="col">
+                            <div class="card text-center h-100 border-info">
+                                <h5 class="card-header text-bg-info">Total</h5>
+                                <div class="card-body">
+                                    <h1 class="card-title">$ <span class="card-title" th:text="${lastBalance}"></span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-center h-100 border-success">
+                                <h5 class="card-header text-bg-success">Sales</h5>
+                                <div class="card-body">
+                                    <h1 class="card-title text-success">$ <span class="card-title"
+                                                                                th:text="${salesSum}"></span></h1>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">Operations: <span class="text-muted"
+                                                                                th:text="${salesCount}"></span></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-center h-100 border-danger">
+                                <h5 class="card-header text-bg-danger">Purchases</h5>
+                                <div class="card-body">
+                                    <h1 class="card-title text-danger">$ <span class="card-title"
+                                                                               th:text="${purchasesSum}"></span></h1>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">Operations: <span class="text-muted"
+                                                                                th:text="${purchasesCount}"></span></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100">
+                    <h4 class="card-header">Eggs</h4>
+                    <div class="card-body row row-cols-1 row-cols-md-5 g-4">
+                        <div class="col">
+                            <div class="card text-center h-100 border-info">
+                                <h5 class="card-header text-bg-info">Total</h5>
+                                <div class="card-body">
+                                    <h1 class="card-title" th:text="${eggsCount}"></h1>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">Capacity: <span class="card-title"
+                                                                              th:text="${eggsCapacity}"></span></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-center h-100 border-success">
+                                <h5 class="card-header text-bg-success">Sold</h5>
+                                <div class="card-body">
+                                    <h1 class="card-title text-success" th:text="${eggSales}"></h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-center h-100 border-danger">
+                                <h5 class="card-header text-bg-danger">Bought</h5>
+                                <div class="card-body">
+                                    <h1 class="card-title text-danger" th:text="${eggPurchases}"></h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-center h-100 border-warning">
+                                <h5 class="card-header text-bg-warning">Hatched</h5>
+                                <div class="card-body">
+                                    <h1 class="card-title text-warning" th:text="${hatchedEggs}"></h1>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">Next: ##</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-center h-100 border-dark">
+                                <h5 class="card-header text-bg-dark">Discarded</h5>
+                                <div class="card-body">
+                                    <h1 class="card-title text-dark">##</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100">
+                    <h4 class="card-header">Chickens</h4>
+                    <div class="card-body row row-cols-1 row-cols-md-5 g-4">
+                        <div class="col">
+                            <div class="card text-center h-100 border-info">
+                                <h5 class="card-header text-bg-info">Total</h5>
+                                <div class="card-body">
+                                    <h1 class="card-title" th:text="${chickensCount}"></h1>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">Capacity: <span class="card-title"
+                                                                              th:text="${chickenCapacity}"></span></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-center h-100 border-success">
+                                <h5 class="card-header text-bg-success">Sold</h5>
+                                <div class="card-body">
+                                    <h1 class="card-title text-success" th:text="${chickenSales}"></h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-center h-100 border-danger">
+                                <h5 class="card-header text-bg-danger">Bought</h5>
+                                <div class="card-body">
+                                    <h1 class="card-title text-danger" th:text="${chickenPurchases}"></h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-center h-100 border-warning">
+                                <h5 class="card-header text-bg-warning">Deceased</h5>
+                                <div class="card-body">
+                                    <h1 class="card-title text-warning" th:text="${deadChicken}"></h1>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">Next: ##</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-center h-100 border-dark">
+                                <h5 class="card-header text-bg-dark">Discarded</h5>
+                                <div class="card-body">
+                                    <h1 class="card-title text-dark">##</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <footer class="help-footnote">
+        <hr>
+        <a th:href="@{https://www.linkedin.com/in/fedeperrone/}"> ChickenTest By: Federico Perrone. Accenture -
+            2023. </a>
+    </footer>
+</div>
+</body>
+</html>
+
+
+
+

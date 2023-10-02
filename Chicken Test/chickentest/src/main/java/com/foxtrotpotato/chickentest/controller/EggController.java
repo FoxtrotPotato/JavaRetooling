@@ -28,7 +28,6 @@ public class EggController {
         List<String> theStringEggs = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-
         for (Egg tempEgg : theEggs) {
             int ageInDays = eggService.calculateEggAgeInDays(tempEgg.getEggId());
             tempEgg.setAgeInDays(ageInDays);
@@ -36,7 +35,6 @@ public class EggController {
             String stringEgg = tempEgg.getEggId() + ", "
                     + tempEgg.getEggBirthDay().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ", "
                     + tempEgg.getAgeInDays();
-
             theStringEggs.add(stringEgg);
         }
 

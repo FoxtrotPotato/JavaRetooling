@@ -7,74 +7,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
-	<title>Product Directory</title>
+    <title>Product Directory</title>
 </head>
 
 <body>
 
 <!-- menu-->
-<a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
-	Menu</a>
+<div class="d-grid">
+    <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button"
+       aria-controls="offcanvasMenu">
+        Menu</a>
+    <br>
+</div>
+
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-	<div class="offcanvas-header">
-		<h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
-		<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-	</div>
-	<div class="offcanvas-body">
-		<div class="d-grid gap-2">
-			<a href="/index" class="btn btn-success btn-lg mb-3" type="button">Home</a>
-			<a href="/balances/list" class="btn btn-primary btn-sm mb-3" type="button">Balances</a>
-			<a href="/chickens/list" class="btn btn-warning btn-sm mb-3" type="button">Chickens</a>
-			<a href="/eggs/list" class="btn btn-warning btn-sm mb-3" type="button">Eggs</a>
-			<a href="/farms/list" class="btn btn-danger btn-sm mb-3" type="button">Farms</a>
-			<a href="/logs/list" class="btn btn-danger btn-sm mb-3" type="button">Logs</a>
-			<a href="/parameters/list" class="btn btn-primary btn-sm mb-3" type="button">Parameters</a>
-			<a href="/products/list" class="btn btn-primary btn-sm mb-3" type="button">Products</a>
-			<a href="/transactions/list" class="btn btn-primary btn-sm mb-3" type="button">Transactions</a>
-			<a href="/users/list" class="btn btn-primary btn-sm mb-3" type="button">Users</a>
-		</div>
-	</div>
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="d-grid gap-2">
+            <a href="/index" class="btn btn-success btn-lg mb-3" type="button">Home</a>
+            <a href="/balances/list" class="btn btn-primary btn-sm mb-3" type="button">Balances</a>
+            <a href="/chickens/list" class="btn btn-warning btn-sm mb-3" type="button">Chickens</a>
+            <a href="/eggs/list" class="btn btn-warning btn-sm mb-3" type="button">Eggs</a>
+            <a href="/farms/list" class="btn btn-danger btn-sm mb-3" type="button">Farms</a>
+            <a href="/logs/list" class="btn btn-danger btn-sm mb-3" type="button">Logs</a>
+            <a href="/parameters/list" class="btn btn-primary btn-sm mb-3" type="button">Parameters</a>
+            <a href="/products/list" class="btn btn-primary btn-sm mb-3" type="button">Products</a>
+            <a href="/transactions/list" class="btn btn-primary btn-sm mb-3" type="button">Transactions</a>
+            <a href="/users/list" class="btn btn-primary btn-sm mb-3" type="button">Users</a>
+        </div>
+    </div>
 </div>
 
 <div class="container">
-	<h3>Product Directory</h3>
-	<hr>
+    <h3>Product Directory</h3>
+    <hr>
 
-	<a th:href="@{/products/showAddProductForm}" class = "btn btn-primary btn-sm mb-3">Add Product</a>
+    <a th:href="@{/products/showAddProductForm}" class="btn btn-primary btn-sm mb-3">Add Product</a>
 
-	<table class="table table-bordered table-striped">
-		<thead class="table-dark">
-			<tr>
-				<th>#</th>
-				<th>Name</th>
-				<th>Value</th>
-				<th>Stock</th>
-                <th>Action</th>
-			</tr>
-		</thead>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Value</th>
+            <th>Stock</th>
+            <th>Action</th>
+        </tr>
+        </thead>
 
-		<tbody>
-			<tr th:each="tempProduct : ${products}">
+        <tbody>
+        <tr th:each="tempProduct : ${products}">
 
-				<td th:text="${tempProduct.productId}" />
-				<td th:text="${tempProduct.productName}" />
-				<td th:text="${tempProduct.ProductValue}" />
-				<td th:text="${tempProduct.ProductStock}" />
-                <td>
-					<a th:href="@{/products/showUpdateProductForm(productId=${tempProduct.productId})}" class = "btn btn-info btn-sm">Update</a>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+            <td th:text="${tempProduct.productId}"/>
+            <td th:text="${tempProduct.productName}"/>
+            <td th:text="${tempProduct.ProductValue}"/>
+            <td th:text="${tempProduct.ProductStock}"/>
+            <td>
+                <a th:href="@{/products/showUpdateProductForm(productId=${tempProduct.productId})}"
+                   class="btn btn-info btn-sm">Update</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
 </div>
 
 <footer class="help-footnote">
-	<hr>
-	<a th:href="@{https://www.linkedin.com/in/fedeperrone/}"> ChickenTest By: Federico Perrone. Accenture - 2023. </a>
+    <hr>
+    <a th:href="@{https://www.linkedin.com/in/fedeperrone/}"> ChickenTest By: Federico Perrone. Accenture - 2023. </a>
 </footer>
 
 </body>

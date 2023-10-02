@@ -2,7 +2,6 @@ package com.foxtrotpotato.chickentest.service;
 
 import com.foxtrotpotato.chickentest.dao.ChickenRepository;
 import com.foxtrotpotato.chickentest.entity.Chicken;
-import com.foxtrotpotato.chickentest.entity.Egg;
 import com.foxtrotpotato.chickentest.entity.Farm;
 import com.foxtrotpotato.chickentest.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class ChickenServiceImpl implements ChickenService {
@@ -73,6 +74,13 @@ public class ChickenServiceImpl implements ChickenService {
     }
 
     @Override
+    public void deleteList(List<Chicken> chickenList){
+        for (Chicken chicken : chickenList){
+            deleteById(chicken.getChickenId());
+        }
+    }
+
+    @Override
     public void createDeleteChickens(String balanceType, int quantity, Product product, Farm farm) {
         if (balanceType.equals("SALE")) {
             for (int i = 0; i < quantity; i++) {
@@ -92,5 +100,26 @@ public class ChickenServiceImpl implements ChickenService {
             }
         }
     }
+
+    public List<Chicken> checkBirthdays(int chickenLifeSpan) {
+        List<Chicken> tempChickensList = findAll();
+        LocalDate today = LocalDate.now();
+        Random random = new Random();
+        List<Chicken> returnChicken = new ArrayList<>();
+
+        for (Chicken chicken : tempChickensList) {
+            LocalDate chickenBirthday = chicken.getChickenBirthDay();
+            int daysAlive = (int) ChronoUnit.DAYS.between(chickenBirthday, today);
+
+            if (daysAlive >= chickenLifeSpan) {
+                boolean killChicken = random.nextBoolean();
+                if (killChicken) {
+                    returnChicken.add(chicken);
+                }
+            }
+        }
+        return returnChicken;
+    }
+
 
 }

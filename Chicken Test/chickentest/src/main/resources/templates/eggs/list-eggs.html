@@ -76,9 +76,6 @@
             <td>
                 <a th:href="@{/eggs/showUpdateEggForm(eggId=${#strings.arraySplit(tempEgg, ',')[0]})}"
                    class="btn btn-info btn-sm">Update</a>
-                <a th:href="@{/eggs/delete(eggId=${#strings.arraySplit(tempEgg, ',')[0]})}"
-                   class="btn btn-danger btn-sm"
-                   onclick="if(!(confirm('Are you sure you want to delete this Egg?'))) return false">Delete</a>
             </td>
         </tr>
         </tbody>

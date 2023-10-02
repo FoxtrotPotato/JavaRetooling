@@ -3,7 +3,6 @@ package com.foxtrotpotato.chickentest.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name="eggs")
@@ -32,8 +31,10 @@ public class Egg {
 
     public Egg(){}
 
-    public Egg(LocalDate eggBirthDay) {
+    public Egg(LocalDate eggBirthDay, Farm farm, Product product) {
         this.eggBirthDay = eggBirthDay;
+        this.farm = farm;
+        this.product = product;
     }
 
     public int getEggId() {

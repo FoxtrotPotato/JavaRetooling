@@ -51,6 +51,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void deleteList(List<Product> products) {
+        for (Product product : products) {
+            productRepository.deleteById(product.getProductId());
+        }
+    }
+
+    @Override
     public ResponseEntity updateStock(String balanceType, int productId, int quantity, int maxCapacity) {
         Product theProduct = findById(productId);
         int excess;
@@ -62,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
             if (tempStock >= quantity) {
                 tempStock = tempStock - quantity;
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not enough "+theProduct.getProductName()+"s stock available for the transaction.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not enough " + theProduct.getProductName() + "s stock available for the transaction.");
             }
         } else {
             tempStock = tempStock + quantity;
@@ -73,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
                 theProduct.setProductStock(tempStock);
                 save(theProduct);
                 return ResponseEntity.ok("Product updated successfully. \n" +
-                         theProduct.getProductName() + "/s surplus sent to the nearest charity centre: " + excess);
+                        theProduct.getProductName() + "/s surplus sent to the nearest charity centre: " + excess);
             }
         }
 
@@ -92,7 +99,6 @@ public class ProductServiceImpl implements ProductService {
         }
         return price;
     }
-
 
 
 }

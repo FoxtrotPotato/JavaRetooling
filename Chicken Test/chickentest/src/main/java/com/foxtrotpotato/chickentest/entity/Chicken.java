@@ -31,8 +31,10 @@ public class Chicken {
     public Chicken() {
     }
 
-    public Chicken(LocalDate chickenBirthDay) {
+    public Chicken(LocalDate chickenBirthDay, Farm farm, Product product) {
         this.chickenBirthDay = chickenBirthDay;
+        this.farm = farm;
+        this.product = product;
     }
 
     public int getChickenId() {

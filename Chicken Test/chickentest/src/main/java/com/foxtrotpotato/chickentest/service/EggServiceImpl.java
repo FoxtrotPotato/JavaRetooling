@@ -1,6 +1,7 @@
 package com.foxtrotpotato.chickentest.service;
 
 import com.foxtrotpotato.chickentest.dao.EggRepository;
+import com.foxtrotpotato.chickentest.entity.Chicken;
 import com.foxtrotpotato.chickentest.entity.Egg;
 import com.foxtrotpotato.chickentest.entity.Farm;
 import com.foxtrotpotato.chickentest.entity.Product;
@@ -9,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class EggServiceImpl implements EggService {
@@ -72,6 +75,13 @@ public class EggServiceImpl implements EggService {
     }
 
     @Override
+    public void deleteList(List<Egg> eggsList){
+        for (Egg egg : eggsList){
+            deleteById(egg.getEggId());
+        }
+    }
+
+    @Override
     public void createDeleteEggs(String balanceType, int quantity, Product product, Farm farm) {
         if (balanceType.equals("SALE")) {
             for (int i = 0; i < quantity; i++) {
@@ -90,6 +100,26 @@ public class EggServiceImpl implements EggService {
                 save(theEgg);
             }
         }
+    }
+
+    public List<Egg> checkBirthdays(int eggLifeSpan) {
+        List<Egg> tempEggsList = findAll();
+        LocalDate today = LocalDate.now();
+        Random random = new Random();
+        List<Egg> returnEgg = new ArrayList<>();
+
+        for (Egg egg : tempEggsList) {
+            LocalDate eggBirthDay = egg.getEggBirthDay();
+            int daysAlive = (int) ChronoUnit.DAYS.between(eggBirthDay, today);
+
+            if (daysAlive >= eggLifeSpan) {
+                boolean hatchEgg = random.nextBoolean();
+                if (hatchEgg) {
+                    returnEgg.add(egg);
+                }
+            }
+        }
+        return returnEgg;
     }
 
 }
