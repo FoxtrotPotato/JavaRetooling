@@ -1,8 +1,12 @@
 package com.foxtrotpotato.chickentest.controller;
 
 import com.foxtrotpotato.chickentest.entity.Chicken;
-import com.foxtrotpotato.chickentest.entity.User;
+import com.foxtrotpotato.chickentest.entity.Farm;
+import com.foxtrotpotato.chickentest.entity.Product;
 import com.foxtrotpotato.chickentest.service.ChickenService;
+import com.foxtrotpotato.chickentest.service.FarmService;
+import com.foxtrotpotato.chickentest.service.ProductService;
+import com.foxtrotpotato.chickentest.util.GlobalData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,27 +21,33 @@ import java.util.List;
 @RequestMapping("/chickens")
 public class ChickenController {
 
-    private ChickenService chickenService;
+    private final ChickenService chickenService;
+    private final GlobalData globalData;
+    private final ProductService productService;
+    private final FarmService farmService;
+
 
     @Autowired
-    public ChickenController(ChickenService theChickenService) {
-        chickenService = theChickenService;
+    public ChickenController(ChickenService chickenService, GlobalData globalData, ProductService productService, FarmService farmService) {
+        this.chickenService = chickenService;
+        this.globalData = globalData;
+        this.productService = productService;
+        this.farmService = farmService;
     }
 
-    @GetMapping("/list")
+    @GetMapping(value = {"/", "/list"})
     public String listChicken(Model theModel) {
         List<Chicken> theChickens = chickenService.findAll();
         List<String> theStringChickens = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+        LocalDate currentDate = globalData.getCurrentDate();
 
         for (Chicken tempChicken : theChickens) {
-            int ageInDays = chickenService.calculateChickenAgeInDays(tempChicken.getChickenId());
+            int ageInDays = chickenService.calculateChickenAgeInDays(tempChicken.getChickenId(), currentDate);
             tempChicken.setAgeInDays(ageInDays);
 
             String stringChicken = tempChicken.getChickenId() + ", "
-                                   + tempChicken.getChickenBirthDay().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ", "
-                                   + tempChicken.getAgeInDays();
+                    + tempChicken.getChickenBirthDay().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ", "
+                    + tempChicken.getAgeInDays();
 
             theStringChickens.add(stringChicken);
         }
@@ -45,16 +55,6 @@ public class ChickenController {
         theModel.addAttribute("chickens", theStringChickens);
 
         return "chickens/list-chickens";
-    }
-
-    @GetMapping("/showAddChickenForm")
-    public String showFormForAdd(Model theModel) {
-
-        Chicken theChicken = new Chicken();
-        theChicken.setChickenBirthDay(LocalDate.now());
-        theModel.addAttribute("chicken", theChicken);
-
-        return "chickens/chicken-form";
     }
 
     @GetMapping("/showUpdateChickenForm")
@@ -68,6 +68,11 @@ public class ChickenController {
 
     @PostMapping("/save")
     public String saveChicken(@ModelAttribute("chicken") Chicken theChicken) {
+
+        theChicken.setProduct(productService.findById(theChicken.getProduct().getProductId()));
+
+        theChicken.setFarm(farmService.getFarmByLoggedUser());
+
         chickenService.save(theChicken);
         return "redirect:/chickens/list";
     }

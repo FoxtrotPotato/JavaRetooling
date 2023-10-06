@@ -44,7 +44,7 @@ CREATE TABLE authorities (
 CREATE TABLE products (
   product_id INT NOT NULL AUTO_INCREMENT,
   product_name VARCHAR(45) NOT NULL,
-  product_value DECIMAL(14,2) NOT NULL,
+  product_value DOUBLE(14,2) NOT NULL,
   product_stock INT DEFAULT NULL,
   farm_id INT NOT NULL DEFAULT 1,
   PRIMARY KEY (product_id),
@@ -79,7 +79,7 @@ CREATE TABLE chickens (
 CREATE TABLE transactions (
   transaction_id INT NOT NULL AUTO_INCREMENT,
   transaction_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  transaction_total DECIMAL(14,2),
+  transaction_total DOUBLE(14,2),
   transaction_observations VARCHAR(60),
   farm_id INT NOT NULL DEFAULT 1,
   PRIMARY KEY (transaction_id),
@@ -90,8 +90,8 @@ CREATE TABLE transactions (
 CREATE TABLE transaction_details (
   transaction_details_id INT NOT NULL AUTO_INCREMENT,
   quantity INT,
-  price DECIMAL(14,2),
-  subtotal DECIMAL(14,2),
+  price DOUBLE(14,2),
+  subtotal DOUBLE(14,2),
   product_id INT,
   transaction_id INT NOT NULL,
   PRIMARY KEY (transaction_details_id),
@@ -104,7 +104,7 @@ CREATE TABLE transaction_details (
 CREATE TABLE balances (
   balance_id INT NOT NULL AUTO_INCREMENT,
   balance_type VARCHAR(45) DEFAULT NULL,
-  balance_total DECIMAL(14,2) DEFAULT NULL,
+  balance_total DOUBLE(14,2) DEFAULT NULL,
   transaction_id INT NOT NULL,
   farm_id INT DEFAULT 1,
   PRIMARY KEY (balance_id),

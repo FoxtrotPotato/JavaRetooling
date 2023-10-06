@@ -14,10 +14,10 @@ public class TransactionDetail {
     private int quantity;
 
     @Column(name = "price")
-    private Float price;
+    private Double price;
 
     @Column(name = "subtotal")
-    private Float subtotal;
+    private Double subtotal;
 
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "product_id")
@@ -30,7 +30,7 @@ public class TransactionDetail {
     public TransactionDetail() {
     }
 
-    public TransactionDetail(Product product, int quantity, Float price, Float subtotal, Transaction transaction) {
+    public TransactionDetail(Product product, int quantity, Double price, Double subtotal, Transaction transaction) {
         this.product = product;
         this.quantity = quantity;
         this.price = price;
@@ -54,19 +54,19 @@ public class TransactionDetail {
         this.quantity = quantity;
     }
 
-    public Float getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public Float getSubtotal() {
+    public Double getSubtotal() {
         return subtotal;
     }
 
-    public void setSubtotal(Float transactionTotal) {
+    public void setSubtotal(Double transactionTotal) {
         this.subtotal = transactionTotal;
     }
 

@@ -15,7 +15,7 @@ public class Balance {
     private String balanceType;
 
     @Column(name="balance_total")
-    private Float balanceTotal;
+    private Double balanceTotal;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "farm_id")
@@ -27,7 +27,7 @@ public class Balance {
 
     public Balance(){}
 
-    public Balance(String balanceType, Float balanceTotal, Transaction transaction, Farm farm) {
+    public Balance(String balanceType, Double balanceTotal, Transaction transaction, Farm farm) {
         this.balanceType = balanceType;
         this.balanceTotal = balanceTotal;
         this.transaction = transaction;
@@ -50,11 +50,11 @@ public class Balance {
         this.balanceType = balanceType;
     }
 
-    public Float getBalanceTotal() {
+    public Double getBalanceTotal() {
         return balanceTotal;
     }
 
-    public void setBalanceTotal(Float balanceTotal) {
+    public void setBalanceTotal(Double balanceTotal) {
         this.balanceTotal = balanceTotal;
     }
 

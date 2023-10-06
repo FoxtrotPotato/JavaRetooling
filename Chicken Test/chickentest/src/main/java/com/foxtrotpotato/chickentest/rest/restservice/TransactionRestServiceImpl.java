@@ -2,12 +2,14 @@ package com.foxtrotpotato.chickentest.rest.restservice;
 
 import com.foxtrotpotato.chickentest.entity.*;
 import com.foxtrotpotato.chickentest.service.*;
+import com.foxtrotpotato.chickentest.util.GlobalData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +25,7 @@ public class TransactionRestServiceImpl implements TransactionRestService {
     private final UserService userService;
     private final ParameterService parameterService;
     private final FarmService farmService;
+    private final GlobalData globalData;
 
     @Autowired
     public TransactionRestServiceImpl(TransactionService transactionService,
@@ -33,7 +36,8 @@ public class TransactionRestServiceImpl implements TransactionRestService {
                                       ChickenService chickenService,
                                       UserService userService,
                                       ParameterService parameterService,
-                                      FarmService farmService) {
+                                      FarmService farmService,
+                                      GlobalData globalData) {
         this.transactionService = transactionService;
         this.transactionDetailService = transactionDetailService;
         this.productService = productService;
@@ -43,6 +47,7 @@ public class TransactionRestServiceImpl implements TransactionRestService {
         this.userService = userService;
         this.parameterService = parameterService;
         this.farmService = farmService;
+        this.globalData = globalData;
     }
 
     public ResponseEntity<String> saveTransaction(Map<String, Object> json) {
@@ -55,12 +60,12 @@ public class TransactionRestServiceImpl implements TransactionRestService {
             String balanceType = String.valueOf(json.get("type"));
             int productId = (int) json.get("product");
             int quantity = (int) json.get("quantity");
-            float price = Float.parseFloat(String.valueOf(json.get("price")));
+            Double price = Double.parseDouble(String.valueOf(json.get("price")));
             String observations = String.valueOf(json.get("observations"));
-            float subtotal = Float.parseFloat(String.valueOf(json.get("subtotal")));
-            float total = Float.parseFloat(String.valueOf(json.get("total")));
-            LocalDateTime date = LocalDateTime.now();
-
+            Double subtotal = Double.parseDouble(String.valueOf(json.get("subtotal")));
+            Double total = Double.parseDouble(String.valueOf(json.get("total")));
+            LocalDateTime date = globalData.getCurrentDateTime();
+            LocalDate currentDate = globalData.getCurrentDate();
             Farm theFarm = farmService.getFarmByLoggedUser();
 
             // get farm parameters
@@ -77,7 +82,7 @@ public class TransactionRestServiceImpl implements TransactionRestService {
             TransactionDetail theTransactionDetail = new TransactionDetail(theProduct, quantity, price, subtotal, theTransaction);
 
             // Prepare Balance
-            Float lastBalance = balanceService.getLastBalance();
+            Double lastBalance = balanceService.getLastBalance();
             Balance theBalance = new Balance(balanceType, total + lastBalance, theTransaction, theFarm);
 
             // Preview
@@ -92,9 +97,9 @@ public class TransactionRestServiceImpl implements TransactionRestService {
 
             // delete/add eggs/chicken
             if (productId == 1) {
-                eggService.createDeleteEggs(balanceType, quantity, theProduct, theFarm);
+                eggService.createDeleteEggs(balanceType, quantity, theProduct, theFarm, currentDate);
             } else if (productId == 2) {
-                chickenService.createDeleteChickens(balanceType, quantity, theProduct, theFarm);
+                chickenService.createDeleteChickens(balanceType, quantity, theProduct, theFarm, currentDate);
             }
 
             return ResponseEntity.ok("Los datos se han enviado correctamente.");

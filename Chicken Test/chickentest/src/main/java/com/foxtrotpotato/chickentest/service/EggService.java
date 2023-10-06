@@ -4,6 +4,7 @@ import com.foxtrotpotato.chickentest.entity.Egg;
 import com.foxtrotpotato.chickentest.entity.Farm;
 import com.foxtrotpotato.chickentest.entity.Product;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface EggService {
@@ -17,11 +18,11 @@ public interface EggService {
 
     void deleteList(List<Egg> eggsList);
 
-    int calculateEggAgeInDays(int theId);
+    int calculateEggAgeInDays(int theId, LocalDate currentDate);
 
-    void createDeleteEggs(String balanceType, int quantity, Product product, Farm farm);
+    void createDeleteEggs(String balanceType, int quantity, Product product, Farm farm, LocalDate currentDate);
 
-    List<Egg> checkBirthdays(int eggLifeSpan);
+    List<Egg> checkBirthdays(int eggLifeSpan, LocalDate currentDate);
 
 
 }

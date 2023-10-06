@@ -21,111 +21,122 @@
 
 <body>
 
-<!-- menu-->
-<a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
-    Menu</a>
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <div class="d-grid gap-2">
-            <a href="/index" class="btn btn-success btn-lg mb-3" type="button">Home</a>
-            <a href="/balances/list" class="btn btn-primary btn-sm mb-3" type="button">Balances</a>
-            <a href="/chickens/list" class="btn btn-warning btn-sm mb-3" type="button">Chickens</a>
-            <a href="/eggs/list" class="btn btn-warning btn-sm mb-3" type="button">Eggs</a>
-            <a href="/farms/list" class="btn btn-danger btn-sm mb-3" type="button">Farms</a>
-            <a href="/logs/list" class="btn btn-danger btn-sm mb-3" type="button">Logs</a>
-            <a href="/parameters/list" class="btn btn-primary btn-sm mb-3" type="button">Parameters</a>
-            <a href="/products/list" class="btn btn-primary btn-sm mb-3" type="button">Products</a>
-            <a href="/transactions/list" class="btn btn-primary btn-sm mb-3" type="button">Transactions</a>
-            <a href="/users/list" class="btn btn-primary btn-sm mb-3" type="button">Users</a>
+<!-- menu -->
+<div class="navbar navbar-expand-lg bg-light sticky-top">
+    <div class="container">
+        <div class="container col-3">
+            <a class="btn btn-outline-secondary" type="button" href="/transactions/list"><< Back</a>
+            <a class="btn btn-outline-success" type="button" href="/index">Home</a>
+            <button class="btn btn-outline-primary" data-bs-toggle="collapse" href="#collapseMenu" role="button"
+                    aria-expanded="false" aria-controls="collapseMenu"> Menu
+            </button>
+        </div>
+        <div class="container row col-9">
+            <h3 class="text-muted col-auto">Chicken Test > Transaction Directory > <h3 class="col-auto">Transaction</h3></h3>
         </div>
     </div>
 </div>
 
-<div class="container-fluid">
-    <br>
-    <h3>Transaction Directory</h3>
-    <hr>
-    <p class="h4 mb-4">New Transaction</p>
-
-    <div class="container-fluid row">
-        <div class="container col-2">
-            <label for="type" class="form-label">Type</label>
-            <select class="form-select" id="type">
-                <option value="1">SALE</option>
-                <option value="2">PURCHASE</option>
-            </select>
-        </div>
-        <div class="container col-2">
-            <label for="product" class="form-label ">Product</label>
-            <select class="form-select" id="product">
-                <option value="0"></option>
-                <option value="1">Egg</option>
-                <option value="2">Chicken</option>
-            </select>
-        </div>
-        <div class="container col-2">
-            <label for="quantity" class="form-label ">Quantity</label>
-            <input type="number" id="quantity" class="form-control col-2 md-2">
-        </div>
-        <div class="container col-2">
-            <label for="price" class="form-label">Price</label>
-            <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">$</span>
-                <input type="number" step="0.01" id="price" class="form-control col-2 md-2" placeholder="0.00">
-            </div>
-        </div>
-        <div class="container col-4">
-            <p class="form-label ">Subtotal</p>
-            <div class="input-group">
-                <span class="input-group-text" id="basic-addon2">$</span>
-                <span type="number" id="subtotal" class="form-control col-2 md-2 text-end" readonly></span>
+<div class="collapse sticky-top sticky-top" id="collapseMenu">
+    <div class="card card-body">
+        <div class="container">
+            <div class="container row gap-2">
+                <a type="button" class="btn-close col gx-5" data-bs-toggle="collapse" href="#collapseMenu" role="button"
+                   aria-expanded="false" aria-controls="collapseMenu"></a>
+                <a href="/balances/list" class="btn btn-primary btn-sm mb-3 col p-2">Balances</a>
+                <a href="/chickens/list" class="btn btn-warning btn-sm mb-3 col p-2">Chickens</a>
+                <a href="/eggs/list" class="btn btn-warning btn-sm mb-3 col p-2" type="button">Eggs</a>
+                <a href="/logs/list" class="btn btn-danger btn-sm mb-3 col p-2">Logs</a>
+                <a href="/products/list" class="btn btn-primary btn-sm mb-3 col p-2">Products</a>
+                <a href="/parameters/list" class="btn btn-primary btn-sm mb-3 col p-2">Parameters</a>
+                <a href="/users/list" class="btn btn-primary btn-sm mb-3 col p-2">Users</a>
             </div>
         </div>
     </div>
-
-    <br>
-
-    <div class="container-fluid row justify-content-end">
-        <div class="col-8 align-self-start">
-            <label for="observations" class="form-label fw-semibold">Observations</label>
-            <input id="observations" type="text" class="form-control">
-        </div>
-        <div class="col-4 align-self-end">
-            <p class="form-label fw-semibold">Total </p>
-            <div class="input-group">
-                <span class="input-group-text" id="basic-addon3">$</span>
-                <span id="total" type="number" class="form-control text-end" readonly></span>
-            </div>
-        </div>
-    </div>
-
-    <br><br>
-
-    <div class="container-fluid row justify-content-end">
-        <div th:if="${notification}" class="alert alert-success col-8">
-            <p th:text="${notification}">success</p>
-        </div>
-        <div class="col offset-md-8">
-            <div class="d-grid mx-auto">
-                <button id="save" class="btn btn-outline-success btn-lg">Save</button>
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            </div>
-        </div>
-    </div>
-
 </div>
 
-<br>
+<!-- main content-->
+<div class="container">
+    <div class="container-fluid">
+        <br>
 
-<footer class="help-footnote">
-    <hr>
-    <a th:href="@{https://www.linkedin.com/in/fedeperrone/}"> ChickenTest By: Federico Perrone. Accenture - 2023. </a>
-</footer>
+        <div class="container-fluid row">
+            <div class="container col-2">
+                <label for="type" class="form-label">Type</label>
+                <select class="form-select" id="type">
+                    <option value="1">SALE</option>
+                    <option value="2">PURCHASE</option>
+                </select>
+            </div>
+            <div class="container col-2">
+                <label for="product" class="form-label ">Product</label>
+                <select class="form-select" id="product">
+                    <option value="0"></option>
+                    <option value="1">Egg</option>
+                    <option value="2">Chicken</option>
+                </select>
+            </div>
+            <div class="container col-2">
+                <label for="quantity" class="form-label ">Quantity</label>
+                <input type="number" id="quantity" class="form-control col-2 md-2">
+            </div>
+            <div class="container col-2">
+                <label for="price" class="form-label">Price</label>
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon1">$</span>
+                    <input type="number" step="0.01" id="price" class="form-control col-2 md-2" placeholder="0.00">
+                </div>
+            </div>
+            <div class="container col-4">
+                <p class="form-label ">Subtotal</p>
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon2">$</span>
+                    <span type="number" id="subtotal" class="form-control col-2 md-2 text-end" readonly></span>
+                </div>
+            </div>
+        </div>
 
+        <br>
+
+        <div class="container-fluid row justify-content-end">
+            <div class="col-8 align-self-start">
+                <label for="observations" class="form-label fw-semibold">Observations</label>
+                <input id="observations" type="text" class="form-control">
+            </div>
+            <div class="col-4 align-self-end">
+                <p class="form-label fw-semibold">Total </p>
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon3">$</span>
+                    <span id="total" type="number" class="form-control text-end" readonly></span>
+                </div>
+            </div>
+        </div>
+
+        <br><br>
+
+        <div class="container-fluid row justify-content-end">
+            <div th:if="${notification}" class="alert alert-success col-8">
+                <p th:text="${notification}">success</p>
+            </div>
+            <div class="col offset-md-8">
+                <div class="d-grid mx-auto">
+                    <button id="save" class="btn btn-primary btn-lg p-2">Save</button>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <br>
+
+    <footer class="help-footnote">
+        <br>
+        <hr>
+        <a th:href="@{https://www.linkedin.com/in/fedeperrone/}"> ChickenTest By: Federico Perrone. Accenture -
+            2023. </a>
+    </footer>
+</div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="../js/transaction.js"></script>
 

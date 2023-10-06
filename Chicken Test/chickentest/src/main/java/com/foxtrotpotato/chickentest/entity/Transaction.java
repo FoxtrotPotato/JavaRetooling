@@ -19,7 +19,7 @@ public class Transaction {
     private LocalDateTime transactionDate;
 
     @Column(name = "transaction_total")
-    private Float transactionTotal;
+    private Double transactionTotal;
 
     @Column(name = "transaction_observations")
     private String transactionObservations;
@@ -39,7 +39,7 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(LocalDateTime transactionDate, Float transactionTotal, String transactionObservations, Farm farm) {
+    public Transaction(LocalDateTime transactionDate, Double transactionTotal, String transactionObservations, Farm farm) {
         this.transactionDate = transactionDate;
         this.transactionTotal = transactionTotal;
         this.transactionObservations = transactionObservations;
@@ -62,11 +62,11 @@ public class Transaction {
         this.transactionDate = transactionDate;
     }
 
-    public Float getTransactionTotal() {
+    public Double getTransactionTotal() {
         return transactionTotal;
     }
 
-    public void setTransactionTotal(Float transactionTotal) {
+    public void setTransactionTotal(Double transactionTotal) {
         this.transactionTotal = transactionTotal;
     }
 

@@ -2,7 +2,6 @@ package com.foxtrotpotato.chickentest.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -20,15 +19,11 @@ public class Farm {
     @OneToMany(mappedBy = "farm")
     private List<User> users;
 
-    @Transient
-    private LocalDate fakeDate;
-
     public Farm() {
     }
 
-    public Farm(String farmName, LocalDate fakeDate) {
+    public Farm(String farmName) {
         this.farmName = farmName;
-        this.fakeDate = fakeDate;
     }
 
     public int getFarmId() {
@@ -53,14 +48,6 @@ public class Farm {
 
     public void setUsers(List<User> users) {
         this.users = users;
-    }
-
-    public LocalDate getFakeDate() {
-        return fakeDate;
-    }
-
-    public void setFakeDate(LocalDate fakeDate) {
-        this.fakeDate = fakeDate;
     }
 
     @Override

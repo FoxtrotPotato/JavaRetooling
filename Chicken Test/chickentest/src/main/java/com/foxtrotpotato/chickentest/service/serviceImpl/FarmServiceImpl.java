@@ -1,7 +1,8 @@
-package com.foxtrotpotato.chickentest.service;
+package com.foxtrotpotato.chickentest.service.serviceImpl;
 
-import com.foxtrotpotato.chickentest.dao.FarmRepository;
+import com.foxtrotpotato.chickentest.repository.FarmRepository;
 import com.foxtrotpotato.chickentest.entity.Farm;
+import com.foxtrotpotato.chickentest.service.FarmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

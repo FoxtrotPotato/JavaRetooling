@@ -82,11 +82,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/transactions/**").hasAuthority("EMPLOYEE")
                         .requestMatchers(HttpMethod.POST, "/api/transactions/**").hasAuthority("EMPLOYEE")
 
+                        .requestMatchers(HttpMethod.POST, "/advanceDays").hasAuthority("EMPLOYEE")
+
                         .requestMatchers("/chickens/**").hasAuthority("EMPLOYEE")
 
                         .requestMatchers("/eggs/**").hasAuthority("EMPLOYEE")
 
-                        .requestMatchers("/").hasRole("EMPLOYEE")
+                        .requestMatchers("/").hasAuthority("EMPLOYEE")
 
                         .requestMatchers("/", "/index.html", "/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()

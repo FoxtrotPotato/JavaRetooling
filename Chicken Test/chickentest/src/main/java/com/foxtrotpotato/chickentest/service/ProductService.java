@@ -18,5 +18,5 @@ public interface ProductService {
 
     ResponseEntity updateStock(String balanceType, int productId, int quantity, int maxCapacity);
 
-    float getProductPrice(int productId);
+    Double getProductPrice(int productId);
 }

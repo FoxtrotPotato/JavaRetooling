@@ -1,7 +1,8 @@
-package com.foxtrotpotato.chickentest.service;
+package com.foxtrotpotato.chickentest.service.serviceImpl;
 
-import com.foxtrotpotato.chickentest.dao.BalanceRepository;
+import com.foxtrotpotato.chickentest.repository.BalanceRepository;
 import com.foxtrotpotato.chickentest.entity.Balance;
+import com.foxtrotpotato.chickentest.service.BalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.Optional;
 @Service
 public class BalanceServiceImpl implements BalanceService {
 
-    private BalanceRepository balanceRepository;
+    private final BalanceRepository balanceRepository;
 
     @Autowired
     public BalanceServiceImpl(BalanceRepository theBalanceRepository) {
@@ -27,7 +28,7 @@ public class BalanceServiceImpl implements BalanceService {
     public Balance findById(int theId) {
         Optional<Balance> result = balanceRepository.findById(theId);
 
-        Balance theBalance = null;
+        Balance theBalance;
 
         if (result.isPresent()) {
             theBalance = result.get();
@@ -44,14 +45,14 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public Float getLastBalance() {
-        float lastBalance;
+    public Double getLastBalance() {
+        Double lastBalance;
         List<Balance> balanceList = findAll();
         if (!balanceList.isEmpty()) {
             Balance tempBalance = balanceList.get(0);
             lastBalance = tempBalance.getBalanceTotal();
         } else {
-            lastBalance = 0f;
+            lastBalance = 0d;
         }
         return lastBalance;
     }
@@ -85,13 +86,13 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public Float sumSalesBalances() {
-        Float totalSales = 0f;
+    public Double sumSalesBalances() {
+        double totalSales = 0d;
         List<Balance> balanceList = findAll();
         if (!balanceList.isEmpty()) {
             for (Balance balance : balanceList) {
                 if (balance.getBalanceType().equals("SALE")){
-                    totalSales = totalSales + balance.getBalanceTotal();
+                    totalSales = totalSales + balance.getTransaction().getTransactionTotal();
                 }
             }
         }
@@ -99,13 +100,13 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public Float sumPurchasesBalances() {
-        Float totalPurchases = 0f;
+    public Double sumPurchasesBalances() {
+        double totalPurchases = 0d;
         List<Balance> balanceList = findAll();
         if (!balanceList.isEmpty()) {
             for (Balance balance : balanceList) {
                 if (balance.getBalanceType().equals("PURCHASE")){
-                    totalPurchases = totalPurchases + balance.getBalanceTotal();
+                    totalPurchases = totalPurchases + balance.getTransaction().getTransactionTotal();
                 }
             }
         }

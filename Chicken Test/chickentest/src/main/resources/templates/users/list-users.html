@@ -7,81 +7,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
-	<title>User Directory</title>
+    <title>User Directory</title>
 </head>
 
 <body>
 
-<!-- menu-->
-<a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
-	Menu</a>
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-	<div class="offcanvas-header">
-		<h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
-		<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-	</div>
-	<div class="offcanvas-body">
-		<div class="d-grid gap-2">
-			<a href="/index" class="btn btn-success btn-lg mb-3" type="button">Home</a>
-			<a href="/balances/list" class="btn btn-primary btn-sm mb-3" type="button">Balances</a>
-			<a href="/chickens/list" class="btn btn-warning btn-sm mb-3" type="button">Chickens</a>
-			<a href="/eggs/list" class="btn btn-warning btn-sm mb-3" type="button">Eggs</a>
-			<a href="/farms/list" class="btn btn-danger btn-sm mb-3" type="button">Farms</a>
-			<a href="/logs/list" class="btn btn-danger btn-sm mb-3" type="button">Logs</a>
-			<a href="/parameters/list" class="btn btn-primary btn-sm mb-3" type="button">Parameters</a>
-			<a href="/products/list" class="btn btn-primary btn-sm mb-3" type="button">Products</a>
-			<a href="/transactions/list" class="btn btn-primary btn-sm mb-3" type="button">Transactions</a>
-			<a href="/users/list" class="btn btn-primary btn-sm mb-3" type="button">Users</a>
-		</div>
-	</div>
+<!-- menu -->
+<div class="navbar navbar-expand-lg bg-light sticky-top">
+    <div class="container">
+        <div class="container col-3">
+            <a class="btn btn-outline-success" type="button" href="/index">Home</a>
+            <button class="btn btn-outline-primary" data-bs-toggle="collapse" href="#collapseMenu" role="button"
+                    aria-expanded="false" aria-controls="collapseMenu"> Menu
+            </button>
+        </div>
+        <div class="container row col-9">
+            <h3 class="text-muted col-auto">Chicken Test > <h3 class="col-auto">User Directory</h3></h3>
+        </div>
+    </div>
 </div>
 
+<div class="collapse sticky-top sticky-top" id="collapseMenu">
+    <div class="card card-body">
+        <div class="container">
+            <div class="container row gap-2">
+                <a type="button" class="btn-close col gx-5" data-bs-toggle="collapse" href="#collapseMenu" role="button"
+                   aria-expanded="false" aria-controls="collapseMenu"></a>
+                <a href="/balances/list" class="btn btn-primary btn-sm mb-3 col p-2">Balances</a>
+                <a href="/chickens/list" class="btn btn-warning btn-sm mb-3 col p-2">Chickens</a>
+                <a href="/eggs/list" class="btn btn-warning btn-sm mb-3 col p-2" type="button">Eggs</a>
+                <a href="/logs/list" class="btn btn-danger btn-sm mb-3 col p-2">Logs</a>
+                <a href="/products/list" class="btn btn-primary btn-sm mb-3 col p-2">Products</a>
+                <a href="/parameters/list" class="btn btn-primary btn-sm mb-3 col p-2">Parameters</a>
+                <a href="/transactions/list" class="btn btn-primary btn-sm mb-3 col p-2">Transactions</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- main content-->
 <div class="container">
-	<h3>User Directory</h3>
-	<hr>
-
-	<a th:href="@{/users/showAddUserForm}" class = "btn btn-primary btn-sm mb-3">Add User</a>
-
-	<table class="table table-bordered table-striped">
-		<thead class="table-dark">
-			<tr>
-				<th>#</th>
-				<th>First Name</th>
-				<th>Last Name</th>
-				<th>Username</th>
-				<th>Email</th>
-				<th>Observations</th>
+    <div class="container">
+        <br>
+        <hr>
+        <div class="d-flex align-items-end flex-column">
+            <a th:href="@{/users/showAddUserForm}" class="btn btn-primary text-nowrap p-2">Add
+                User</a>
+        </div>
+        <br>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Observations</th>
                 <th>Action</th>
-			</tr>
-		</thead>
+            </tr>
+            </thead>
 
-		<tbody>
-			<tr th:each="tempUser : ${users}">
+            <tbody>
+            <tr th:each="tempUser : ${users}">
 
-				<td th:text="${tempUser.userId}" />
-				<td th:text="${tempUser.firstName}" />
-				<td th:text="${tempUser.lastName}" />
-				<td th:text="${tempUser.username}" />
-				<td th:text="${tempUser.email}" />
-				<td th:text="${tempUser.userObservations}" />
+                <td th:text="${tempUser.userId}"/>
+                <td th:text="${tempUser.firstName}"/>
+                <td th:text="${tempUser.lastName}"/>
+                <td th:text="${tempUser.username}"/>
+                <td th:text="${tempUser.email}"/>
+                <td th:text="${tempUser.userObservations}"/>
                 <td>
-					<a th:href="@{/users/showUpdateUserForm(userId=${tempUser.userId})}" class = "btn btn-info btn-sm">Update</a>
-					<a th:href="@{/users/delete(userId=${tempUser.userId})}" class = "btn btn-danger btn-sm"
-					   onclick="if(!(confirm('Are you sure you want to delete this user?'))) return false">Delete</a>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+                    <a th:href="@{/users/showUpdateUserForm(userId=${tempUser.userId})}" class="btn btn-info btn-sm">Update</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="help-footnote">
+        <br>
+        <hr>
+        <a th:href="@{https://www.linkedin.com/in/fedeperrone/}"> ChickenTest By: Federico Perrone. Accenture -
+            2023. </a>
+    </footer>
 </div>
-
-<footer class="help-footnote">
-	<hr>
-	<a th:href="@{https://www.linkedin.com/in/fedeperrone/}"> ChickenTest By: Federico Perrone. Accenture - 2023. </a>
-</footer>
-
 </body>
 </html>
 

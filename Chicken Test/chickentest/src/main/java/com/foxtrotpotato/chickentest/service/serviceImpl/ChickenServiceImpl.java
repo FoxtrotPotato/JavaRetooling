@@ -1,9 +1,10 @@
-package com.foxtrotpotato.chickentest.service;
+package com.foxtrotpotato.chickentest.service.serviceImpl;
 
-import com.foxtrotpotato.chickentest.dao.ChickenRepository;
+import com.foxtrotpotato.chickentest.repository.ChickenRepository;
 import com.foxtrotpotato.chickentest.entity.Chicken;
 import com.foxtrotpotato.chickentest.entity.Farm;
 import com.foxtrotpotato.chickentest.entity.Product;
+import com.foxtrotpotato.chickentest.service.ChickenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class ChickenServiceImpl implements ChickenService {
@@ -46,7 +48,7 @@ public class ChickenServiceImpl implements ChickenService {
     }
 
     @Override
-    public int calculateChickenAgeInDays(int theId) {
+    public int calculateChickenAgeInDays(int theId, LocalDate currentDate) {
         Optional<Chicken> optionalChicken = chickenRepository.findById(theId);
         Chicken tempChicken;
         int chickenAge;
@@ -54,7 +56,6 @@ public class ChickenServiceImpl implements ChickenService {
         if (optionalChicken.isPresent()) {
             tempChicken = optionalChicken.get();
             LocalDate tempBirthDay = tempChicken.getChickenBirthDay();
-            LocalDate currentDate = LocalDate.now();
             chickenAge = (int) ChronoUnit.DAYS.between(tempBirthDay, currentDate);
         } else {
             throw new RuntimeException("Did not find Chicken id - " + theId);
@@ -74,14 +75,14 @@ public class ChickenServiceImpl implements ChickenService {
     }
 
     @Override
-    public void deleteList(List<Chicken> chickenList){
-        for (Chicken chicken : chickenList){
+    public void deleteList(List<Chicken> chickenList) {
+        for (Chicken chicken : chickenList) {
             deleteById(chicken.getChickenId());
         }
     }
 
     @Override
-    public void createDeleteChickens(String balanceType, int quantity, Product product, Farm farm) {
+    public void createDeleteChickens(String balanceType, int quantity, Product product, Farm farm, LocalDate currentDate) {
         if (balanceType.equals("SALE")) {
             for (int i = 0; i < quantity; i++) {
                 List<Chicken> chickensList = findAll();
@@ -93,7 +94,7 @@ public class ChickenServiceImpl implements ChickenService {
         } else {
             for (int i = 0; i < quantity; i++) {
                 Chicken theChicken = new Chicken();
-                theChicken.setChickenBirthDay(LocalDate.now());
+                theChicken.setChickenBirthDay(currentDate);
                 theChicken.setProduct(product);
                 theChicken.setFarm(farm);
                 save(theChicken);
@@ -101,24 +102,10 @@ public class ChickenServiceImpl implements ChickenService {
         }
     }
 
-    public List<Chicken> checkBirthdays(int chickenLifeSpan) {
+    public List<Chicken> checkBirthdays(int chickenLifeSpan, LocalDate currentDate) {
         List<Chicken> tempChickensList = findAll();
-        LocalDate today = LocalDate.now();
-        Random random = new Random();
-        List<Chicken> returnChicken = new ArrayList<>();
-
-        for (Chicken chicken : tempChickensList) {
-            LocalDate chickenBirthday = chicken.getChickenBirthDay();
-            int daysAlive = (int) ChronoUnit.DAYS.between(chickenBirthday, today);
-
-            if (daysAlive >= chickenLifeSpan) {
-                boolean killChicken = random.nextBoolean();
-                if (killChicken) {
-                    returnChicken.add(chicken);
-                }
-            }
-        }
-        return returnChicken;
+        return tempChickensList.stream().filter(chicken ->
+                (int) ChronoUnit.DAYS.between(chicken.getChickenBirthDay(), currentDate) >= chickenLifeSpan).collect(Collectors.toList());
     }
 
 

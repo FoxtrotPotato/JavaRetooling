@@ -1,7 +1,8 @@
-package com.foxtrotpotato.chickentest.service;
+package com.foxtrotpotato.chickentest.service.serviceImpl;
 
-import com.foxtrotpotato.chickentest.dao.ProductRepository;
+import com.foxtrotpotato.chickentest.repository.ProductRepository;
 import com.foxtrotpotato.chickentest.entity.Product;
+import com.foxtrotpotato.chickentest.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,18 +59,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity updateStock(String balanceType, int productId, int quantity, int maxCapacity) {
+    public ResponseEntity<String> updateStock(String balanceType, int productId, int quantity, int maxCapacity) {
         Product theProduct = findById(productId);
         int excess;
-        int tempStock = (int) theProduct.getProductStock();
+        int tempStock = theProduct.getProductStock();
+        ResponseEntity<String> response = ResponseEntity.status(HttpStatus.OK).body("Product updated successfully.");
 
         System.out.println("tempstock: " + tempStock);
 
-        if (balanceType.equals("SALE")) {
+        if (balanceType.equals("SALE") || balanceType.equals("HATCH") || balanceType.equals("DEATH")){
             if (tempStock >= quantity) {
                 tempStock = tempStock - quantity;
+
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not enough " + theProduct.getProductName() + "s stock available for the transaction.");
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not enough " + theProduct.getProductName() + "s stock available for the transaction.");
             }
         } else {
             tempStock = tempStock + quantity;
@@ -77,23 +80,23 @@ public class ProductServiceImpl implements ProductService {
             if (tempStock > maxCapacity) {
                 excess = tempStock - maxCapacity;
                 tempStock = tempStock - excess;
-                theProduct.setProductStock(tempStock);
-                save(theProduct);
-                return ResponseEntity.ok("Product updated successfully. \n" +
+                response = ResponseEntity.ok("Product updated successfully. \n" +
                         theProduct.getProductName() + "/s surplus sent to the nearest charity centre: " + excess);
             }
         }
 
         theProduct.setProductStock(tempStock);
         save(theProduct);
+
         System.out.println("product OK");
-        return ResponseEntity.ok("Product updated successfully.");
+
+        return response;
     }
 
     @Override
-    public float getProductPrice(int productId) {
+    public Double getProductPrice(int productId) {
         Optional<Product> theProduct = productRepository.findById(productId);
-        float price = 0f;
+        Double price = 0d;
         if (theProduct.isPresent()) {
             price = theProduct.get().getProductValue();
         }

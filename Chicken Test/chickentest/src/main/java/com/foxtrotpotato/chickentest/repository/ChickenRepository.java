@@ -1,4 +1,4 @@
-package com.foxtrotpotato.chickentest.dao;
+package com.foxtrotpotato.chickentest.repository;
 
 import com.foxtrotpotato.chickentest.entity.Chicken;
 import org.springframework.data.jpa.repository.JpaRepository;

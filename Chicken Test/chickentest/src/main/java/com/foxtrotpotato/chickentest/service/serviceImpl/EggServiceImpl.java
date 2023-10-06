@@ -1,10 +1,10 @@
-package com.foxtrotpotato.chickentest.service;
+package com.foxtrotpotato.chickentest.service.serviceImpl;
 
-import com.foxtrotpotato.chickentest.dao.EggRepository;
-import com.foxtrotpotato.chickentest.entity.Chicken;
+import com.foxtrotpotato.chickentest.repository.EggRepository;
 import com.foxtrotpotato.chickentest.entity.Egg;
 import com.foxtrotpotato.chickentest.entity.Farm;
 import com.foxtrotpotato.chickentest.entity.Product;
+import com.foxtrotpotato.chickentest.service.EggService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class EggServiceImpl implements EggService {
@@ -47,7 +48,7 @@ public class EggServiceImpl implements EggService {
     }
 
     @Override
-    public int calculateEggAgeInDays(int theId) {
+    public int calculateEggAgeInDays(int theId, LocalDate currentDate) {
         Optional<Egg> optionalEgg = eggRepository.findById(theId);
         Egg tempEgg;
         int eggAge;
@@ -55,7 +56,6 @@ public class EggServiceImpl implements EggService {
         if (optionalEgg.isPresent()) {
             tempEgg = optionalEgg.get();
             LocalDate tempBirthDay = tempEgg.getEggBirthDay();
-            LocalDate currentDate = LocalDate.now();
             eggAge = (int) ChronoUnit.DAYS.between(tempBirthDay, currentDate);
         } else {
             throw new RuntimeException("Did not find Egg id - " + theId);
@@ -82,7 +82,7 @@ public class EggServiceImpl implements EggService {
     }
 
     @Override
-    public void createDeleteEggs(String balanceType, int quantity, Product product, Farm farm) {
+    public void createDeleteEggs(String balanceType, int quantity, Product product, Farm farm, LocalDate currentDate) {
         if (balanceType.equals("SALE")) {
             for (int i = 0; i < quantity; i++) {
                 List<Egg> eggsList = findAll();
@@ -94,7 +94,7 @@ public class EggServiceImpl implements EggService {
         } else {
             for (int i = 0; i < quantity; i++) {
                 Egg theEgg = new Egg();
-                theEgg.setEggBirthDay(LocalDate.now());
+                theEgg.setEggBirthDay(currentDate);
                 theEgg.setProduct(product);
                 theEgg.setFarm(farm);
                 save(theEgg);
@@ -102,24 +102,10 @@ public class EggServiceImpl implements EggService {
         }
     }
 
-    public List<Egg> checkBirthdays(int eggLifeSpan) {
+    public List<Egg> checkBirthdays(int eggLifeSpan, LocalDate currentDate) {
         List<Egg> tempEggsList = findAll();
-        LocalDate today = LocalDate.now();
-        Random random = new Random();
-        List<Egg> returnEgg = new ArrayList<>();
-
-        for (Egg egg : tempEggsList) {
-            LocalDate eggBirthDay = egg.getEggBirthDay();
-            int daysAlive = (int) ChronoUnit.DAYS.between(eggBirthDay, today);
-
-            if (daysAlive >= eggLifeSpan) {
-                boolean hatchEgg = random.nextBoolean();
-                if (hatchEgg) {
-                    returnEgg.add(egg);
-                }
-            }
-        }
-        return returnEgg;
+        return tempEggsList.stream().filter(egg ->
+                (int) ChronoUnit.DAYS.between(egg.getEggBirthDay(), currentDate) >= eggLifeSpan).collect(Collectors.toList());
     }
 
 }

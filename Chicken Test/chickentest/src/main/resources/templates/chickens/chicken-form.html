@@ -16,49 +16,68 @@
 
 <body>
 
-<!-- menu-->
-<a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu">
-    Menu</a>
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <div class="d-grid gap-2">
-            <a href="/index" class="btn btn-success btn-lg mb-3" type="button">Home</a>
-            <a href="/balances/list" class="btn btn-primary btn-sm mb-3" type="button">Balances</a>
-            <a href="/chickens/list" class="btn btn-warning btn-sm mb-3" type="button">Chickens</a>
-            <a href="/eggs/list" class="btn btn-warning btn-sm mb-3" type="button">Eggs</a>
-            <a href="/farms/list" class="btn btn-danger btn-sm mb-3" type="button">Farms</a>
-            <a href="/logs/list" class="btn btn-danger btn-sm mb-3" type="button">Logs</a>
-            <a href="/parameters/list" class="btn btn-primary btn-sm mb-3" type="button">Parameters</a>
-            <a href="/products/list" class="btn btn-primary btn-sm mb-3" type="button">Products</a>
-            <a href="/transactions/list" class="btn btn-primary btn-sm mb-3" type="button">Transactions</a>
-            <a href="/users/list" class="btn btn-primary btn-sm mb-3" type="button">Users</a>
+<!-- menu -->
+<div class="navbar navbar-expand-lg bg-light sticky-top">
+    <div class="container">
+        <div class="container col-3">
+            <a class="btn btn-outline-secondary" type="button" href="/chickens/list"><< Back</a>
+            <a class="btn btn-outline-success" type="button" href="/index">Home</a>
+            <button class="btn btn-outline-primary" data-bs-toggle="collapse" href="#collapseMenu" role="button"
+                    aria-expanded="false" aria-controls="collapseMenu"> Menu
+            </button>
+        </div>
+        <div class="container row col-9">
+            <h3 class="text-muted col-auto">Chicken Test > Chicken Directory > <h3 class="col-auto">Chicken</h3></h3>
         </div>
     </div>
 </div>
 
-
-<div class="container">
-    <br>
-    <h3>Chicken Directory</h3>
-    <hr>
-    <p class="h4 mb-4">Save Chicken</p>
-    <form action="#" th:action="@{/chickens/save}" th:object="${chicken}" method="POST">
-        <input type="text" th:field="*{chickenId}" class="form-control mb-4 w-25" th:readonly="${true}"
-               disabled="disabled">
-        <input type="hidden" th:field="*{chickenId}"/>
-        <input type="text" th:field="*{chickenBirthDay}" class="form-control mb-4 w-25">
-        <button type="submit" class="btn btn-info col-2">Save</button>
-    </form>
+<div class="collapse sticky-top sticky-top" id="collapseMenu">
+    <div class="card card-body">
+        <div class="container">
+            <div class="container row gap-2">
+                <a type="button" class="btn-close col gx-5" data-bs-toggle="collapse" href="#collapseMenu" role="button"
+                   aria-expanded="false" aria-controls="collapseMenu"></a>
+                <a href="/balances/list" class="btn btn-primary btn-sm mb-3 col p-2">Balances</a>
+                <a href="/eggs/list" class="btn btn-warning btn-sm mb-3 col p-2">Eggs</a>
+                <a href="/logs/list" class="btn btn-danger btn-sm mb-3 col p-2">Logs</a>
+                <a href="/products/list" class="btn btn-primary btn-sm mb-3 col p-2">Products</a>
+                <a href="/parameters/list" class="btn btn-primary btn-sm mb-3 col p-2">Parameters</a>
+                <a href="/transactions/list" class="btn btn-primary btn-sm mb-3 col p-2">Transactions</a>
+                <a href="/users/list" class="btn btn-primary btn-sm mb-3 col p-2">Users</a>
+            </div>
+        </div>
+    </div>
 </div>
 
-<footer class="help-footnote">
-    <hr>
-    <a th:href="@{https://www.linkedin.com/in/fedeperrone/}"> ChickenTest By: Federico Perrone. Accenture - 2023. </a>
-</footer>
+<div class="container">
+    <div class="container">
+        <br>
+        <form action="#" th:action="@{/chickens/save}" th:object="${chicken}" method="POST">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control mb-4 w-25" id="chickenId" th:field="*{chickenId}" th:readonly="${true}"
+                       placeholder="Id" disabled="disabled">
+                <label for="chickenId">Id</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control mb-4 w-25" id="chickenBirthDay" th:field="*{chickenBirthDay}"
+                       placeholder="Stock">
+                <label for="chickenBirthDay">Birthday</label>
+            </div>
+            <button type="submit" class="btn btn-primary col-2 p-2">Save</button>
+
+            <input type="hidden" th:field="*{chickenId}"/>
+            <input type="hidden" th:field="*{product.productId}" class="form-control mb-4 w-25">
+        </form>
+    </div>
+
+    <footer class="help-footnote">
+        <br>
+        <hr>
+        <a th:href="@{https://www.linkedin.com/in/fedeperrone/}"> ChickenTest By: Federico Perrone. Accenture -
+            2023. </a>
+    </footer>
+</div>
 
 </body>
 

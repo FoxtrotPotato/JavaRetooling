@@ -28,10 +28,4 @@ public class BalanceController {
         return "balances/list-balances";
     }
 
-    @PostMapping("/save")
-    public String saveBalance(@ModelAttribute("balance") Balance theBalance) {
-        balanceService.save(theBalance);
-        return "redirect:/balances/list";
-    }
-
 }

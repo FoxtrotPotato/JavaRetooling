@@ -15,7 +15,7 @@ public class Product {
     private String productName;
 
     @Column(name="product_value")
-    private Float productValue;
+    private Double productValue;
 
     @Column(name="product_stock")
     private int productStock;
@@ -26,7 +26,7 @@ public class Product {
 
     public Product(){}
 
-    public Product(String productName, Float productValue, int productStock, Farm farm) {
+    public Product(String productName, Double productValue, int productStock, Farm farm) {
         this.productName = productName;
         this.productValue = productValue;
         this.productStock = productStock;
@@ -49,11 +49,11 @@ public class Product {
         this.productName = productName;
     }
 
-    public Float getProductValue() {
+    public Double getProductValue() {
         return productValue;
     }
 
-    public void setProductValue(Float productValue) {
+    public void setProductValue(Double productValue) {
         this.productValue = productValue;
     }
 

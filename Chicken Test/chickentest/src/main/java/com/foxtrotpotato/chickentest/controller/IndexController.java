@@ -1,16 +1,21 @@
 package com.foxtrotpotato.chickentest.controller;
 
-import com.foxtrotpotato.chickentest.entity.*;
+import com.foxtrotpotato.chickentest.entity.Chicken;
+import com.foxtrotpotato.chickentest.entity.Egg;
+import com.foxtrotpotato.chickentest.entity.Parameter;
 import com.foxtrotpotato.chickentest.rest.restservice.TransactionRestService;
 import com.foxtrotpotato.chickentest.service.*;
+import com.foxtrotpotato.chickentest.util.GlobalData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
@@ -26,6 +31,7 @@ public class IndexController {
     private final TransactionDetailService transactionDetailService;
     private final ParameterService parameterService;
     private final FarmService farmService;
+    private GlobalData globalData;
 
     @Autowired
     public IndexController(TransactionService transactionService,
@@ -36,7 +42,8 @@ public class IndexController {
                            EggService eggService,
                            ChickenService chickenService,
                            ParameterService parameterService,
-                           FarmService farmService) {
+                           FarmService farmService,
+                           GlobalData globalData) {
         this.transactionService = transactionService;
         this.transactionDetailService = transactionDetailService;
         this.transactionRestService = transactionRestService;
@@ -46,6 +53,7 @@ public class IndexController {
         this.eggService = eggService;
         this.parameterService = parameterService;
         this.farmService = farmService;
+        this.globalData = globalData;
     }
 
     @GetMapping(value = {"/", "/index"})
@@ -63,10 +71,15 @@ public class IndexController {
 
     private int hatchedEggs;
     private int deadChicken;
+    //private LocalDate currentDate = globalData.getCurrentDate();
 
-    @GetMapping("/btn1")
-    public String button1() {
-        // update date
+    @PostMapping("/advanceDays")
+    public String advanceDays(@RequestParam("daysToAdd") int daysToAdd) {
+        LocalDate tempDate = globalData.currentDate.plusDays(daysToAdd);
+        globalData.setCurrentDate(tempDate);
+        LocalDateTime tempDateTime = globalData.currentDateTime.plusDays(daysToAdd);
+        globalData.setCurrentDateTime(tempDateTime);
+
         hatchEggs();
         killChicken();
         oviposition();
@@ -75,26 +88,30 @@ public class IndexController {
     }
 
     public void hatchEggs() {
-        List<Egg> hatchedEggsList = eggService.checkBirthdays(eggLifeSpan);
+        List<Egg> hatchedEggsList = eggService.checkBirthdays(eggLifeSpan, GlobalData.currentDate);
         int hatchedEggsQty = (hatchedEggsList != null) ? hatchedEggsList.size() : 0;
 
         if (hatchedEggsQty > 0) {
             hatchedEggs = hatchedEggs + hatchedEggsQty;
+            productService.updateStock("HATCH", 1, hatchedEggsQty, parameterService.findById(1).getParameterValue());
             eggService.deleteList(hatchedEggsList);
-            System.out.println("deleted: " + hatchedEggsList);
-            for (int i = 0; i < hatchedEggsQty; i++){
-                Chicken newChicken = new Chicken(LocalDate.now(), farmService.getFarmByLoggedUser(), productService.findById(2));
+            productService.updateStock("birth", 2, hatchedEggsQty, parameterService.findById(2).getParameterValue());
+
+            for (int i = 0; i < hatchedEggsQty; i++) {
+                Chicken newChicken = new Chicken(globalData.getCurrentDate(), farmService.getFarmByLoggedUser(), productService.findById(2));
                 chickenService.save(newChicken);
             }
         }
     }
 
     public void killChicken() {
-        List<Chicken> deadChickenList = chickenService.checkBirthdays(chickenLifeSpan);
+        List<Chicken> deadChickenList = chickenService.checkBirthdays(chickenLifeSpan, GlobalData.currentDate);
+        System.out.println("deadChickenList:" + deadChickenList);
         int deadChickenQty = (deadChickenList != null) ? deadChickenList.size() : 0;
 
         if (deadChickenQty > 0) {
             deadChicken = deadChicken + deadChickenQty;
+            productService.updateStock("DEATH", 2, deadChickenQty, parameterService.findById(2).getParameterValue());
             chickenService.deleteList(deadChickenList);
             System.out.println("deleted: " + deadChickenList);
         }
@@ -106,9 +123,9 @@ public class IndexController {
         for (Chicken chicken : chickenList) {
             boolean layEgg = random.nextBoolean();
             if (layEgg) {
-                Egg newEgg = new Egg(LocalDate.now(), farmService.getFarmByLoggedUser(), productService.findById(1));
+                Egg newEgg = new Egg(globalData.getCurrentDate(), farmService.getFarmByLoggedUser(), productService.findById(1));
                 eggService.save(newEgg);
-                productService.updateStock("oviposition", 1, 1, 1);
+                productService.updateStock("oviposition", 1, 1, parameterService.findById(1).getParameterValue());
                 System.out.println("new egg: " + newEgg);
             }
         }
@@ -119,22 +136,21 @@ public class IndexController {
     @GetMapping("/main")
     public String indexData(Model theModel) {
 
+        theModel.addAttribute("currentDate", GlobalData.currentDate);
+        System.out.println("fake date: " + GlobalData.currentDate);
+
         // Farm
         String farmName = farmService.getFarmByLoggedUser().getFarmName();
         theModel.addAttribute("farmName", farmName);
 
-   //     LocalDate fakeDate = farmService.getFarmByLoggedUser().getFakeDate();
-     //   theModel.addAttribute("fakeDate", fakeDate);
-       // System.out.println("fake date: " + fakeDate);
-
         // Balances
-        Float lastBalance = balanceService.getLastBalance();
+        Double lastBalance = balanceService.getLastBalance();
         theModel.addAttribute("lastBalance", lastBalance);
 
-        Float salesSum = balanceService.sumSalesBalances();
+        Double salesSum = balanceService.sumSalesBalances();
         theModel.addAttribute("salesSum", salesSum);
 
-        Float purchasesSum = balanceService.sumPurchasesBalances();
+        Double purchasesSum = balanceService.sumPurchasesBalances();
         theModel.addAttribute("purchasesSum", purchasesSum);
 
         int salesCount = balanceService.countSalesBalances();
@@ -177,8 +193,6 @@ public class IndexController {
 
         return "main";
     }
-
-
 
 
 }

@@ -1,0 +1,10 @@
+.custom-width-1{
+    width: 20px;
+}
+
+.custom-width-2{
+    background-color: green;
+    width: 100px;
+    max-width: 100px;
+    min-width: 100px;
+}

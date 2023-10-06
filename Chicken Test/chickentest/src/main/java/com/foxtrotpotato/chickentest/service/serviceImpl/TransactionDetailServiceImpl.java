@@ -1,8 +1,8 @@
-package com.foxtrotpotato.chickentest.service;
+package com.foxtrotpotato.chickentest.service.serviceImpl;
 
-import com.foxtrotpotato.chickentest.dao.TransactionDetailRepository;
-import com.foxtrotpotato.chickentest.entity.Balance;
+import com.foxtrotpotato.chickentest.repository.TransactionDetailRepository;
 import com.foxtrotpotato.chickentest.entity.TransactionDetail;
+import com.foxtrotpotato.chickentest.service.TransactionDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -81,6 +81,7 @@ The management of the farm needs to stick to the following.
 - navbar menu ✅
 ####
 - Used Optional container (java 8)
+- Used Streams on chicken and egg services
 - created Spring MVC app - up and running
 ####
 - add streams/lambda expressions?

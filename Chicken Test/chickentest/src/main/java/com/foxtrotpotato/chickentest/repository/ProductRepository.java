@@ -1,6 +1,5 @@
-package com.foxtrotpotato.chickentest.dao;
+package com.foxtrotpotato.chickentest.repository;
 
-import com.foxtrotpotato.chickentest.entity.Balance;
 import com.foxtrotpotato.chickentest.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
