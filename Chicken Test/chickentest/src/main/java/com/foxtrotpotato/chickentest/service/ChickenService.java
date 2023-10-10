@@ -21,7 +21,7 @@ public interface ChickenService {
 
     int calculateChickenAgeInDays(int theId, LocalDate currentDate);
 
-    void createDeleteChickens(String balanceType, int quantity, Product product, Farm farm, LocalDate currentDate);
+    void createDeleteChickens(String balanceType, int quantity, Product product, Farm farm, LocalDate currentDate, int maxCapacity);
 
     List<Chicken> checkBirthdays(int chickenLifeSpan, LocalDate currentDate);
 

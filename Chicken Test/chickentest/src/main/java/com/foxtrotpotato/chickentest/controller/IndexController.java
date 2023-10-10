@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -69,10 +70,6 @@ public class IndexController {
     @Value("${eggs.lifespan.days}")
     private int eggLifeSpan;
 
-    private int hatchedEggs;
-    private int deadChicken;
-    //private LocalDate currentDate = globalData.getCurrentDate();
-
     @PostMapping("/advanceDays")
     public String advanceDays(@RequestParam("daysToAdd") int daysToAdd) {
         LocalDate tempDate = globalData.currentDate.plusDays(daysToAdd);
@@ -90,16 +87,23 @@ public class IndexController {
     public void hatchEggs() {
         List<Egg> hatchedEggsList = eggService.checkBirthdays(eggLifeSpan, GlobalData.currentDate);
         int hatchedEggsQty = (hatchedEggsList != null) ? hatchedEggsList.size() : 0;
+        int tempChickenCapacity = parameterService.findById(2).getParameterValue();
 
         if (hatchedEggsQty > 0) {
-            hatchedEggs = hatchedEggs + hatchedEggsQty;
+            globalData.setHatchedEggs(globalData.getHatchedEggs() + hatchedEggsQty);
             productService.updateStock("HATCH", 1, hatchedEggsQty, parameterService.findById(1).getParameterValue());
             eggService.deleteList(hatchedEggsList);
-            productService.updateStock("birth", 2, hatchedEggsQty, parameterService.findById(2).getParameterValue());
 
             for (int i = 0; i < hatchedEggsQty; i++) {
-                Chicken newChicken = new Chicken(globalData.getCurrentDate(), farmService.getFarmByLoggedUser(), productService.findById(2));
-                chickenService.save(newChicken);
+                System.out.println("hatch eggs temp stock=" + productService.findById(2).getProductStock());
+                System.out.println("hatch eggs temp capacity=" + tempChickenCapacity);
+
+
+                if (productService.findById(2).getProductStock() < tempChickenCapacity) {
+                    Chicken newChicken = new Chicken(globalData.getCurrentDate(), farmService.getFarmByLoggedUser(), productService.findById(2));
+                    chickenService.save(newChicken);
+                }
+                productService.updateStock("birth", 2, 1, tempChickenCapacity);
             }
         }
     }
@@ -110,7 +114,7 @@ public class IndexController {
         int deadChickenQty = (deadChickenList != null) ? deadChickenList.size() : 0;
 
         if (deadChickenQty > 0) {
-            deadChicken = deadChicken + deadChickenQty;
+            globalData.setDeadChicken(globalData.getDeadChicken() + deadChickenQty);
             productService.updateStock("DEATH", 2, deadChickenQty, parameterService.findById(2).getParameterValue());
             chickenService.deleteList(deadChickenList);
             System.out.println("deleted: " + deadChickenList);
@@ -120,13 +124,17 @@ public class IndexController {
     public void oviposition() {
         List<Chicken> chickenList = chickenService.findAll();
         Random random = new Random();
+        int tempCapacity = parameterService.findById(1).getParameterValue();
+
         for (Chicken chicken : chickenList) {
             boolean layEgg = random.nextBoolean();
             if (layEgg) {
-                Egg newEgg = new Egg(globalData.getCurrentDate(), farmService.getFarmByLoggedUser(), productService.findById(1));
-                eggService.save(newEgg);
+                if (productService.findById(1).getProductStock() < tempCapacity) {
+                    Egg newEgg = new Egg(globalData.getCurrentDate(), farmService.getFarmByLoggedUser(), productService.findById(1));
+                    eggService.save(newEgg);
+                    System.out.println("new egg: " + newEgg);
+                }
                 productService.updateStock("oviposition", 1, 1, parameterService.findById(1).getParameterValue());
-                System.out.println("new egg: " + newEgg);
             }
         }
     }
@@ -135,6 +143,7 @@ public class IndexController {
     // main data board
     @GetMapping("/main")
     public String indexData(Model theModel) {
+        DecimalFormat df = new DecimalFormat("0.00");
 
         theModel.addAttribute("currentDate", GlobalData.currentDate);
         System.out.println("fake date: " + GlobalData.currentDate);
@@ -145,13 +154,13 @@ public class IndexController {
 
         // Balances
         Double lastBalance = balanceService.getLastBalance();
-        theModel.addAttribute("lastBalance", lastBalance);
+        theModel.addAttribute("lastBalance", df.format(lastBalance));
 
         Double salesSum = balanceService.sumSalesBalances();
-        theModel.addAttribute("salesSum", salesSum);
+        theModel.addAttribute("salesSum", df.format(salesSum));
 
         Double purchasesSum = balanceService.sumPurchasesBalances();
-        theModel.addAttribute("purchasesSum", purchasesSum);
+        theModel.addAttribute("purchasesSum", df.format(purchasesSum));
 
         int salesCount = balanceService.countSalesBalances();
         theModel.addAttribute("salesCount", salesCount);
@@ -173,7 +182,8 @@ public class IndexController {
         int eggsCapacity = parameterService.findById(1).getParameterValue();
         theModel.addAttribute("eggsCapacity", eggsCapacity);
 
-        theModel.addAttribute("hatchedEggs", hatchedEggs);
+        theModel.addAttribute("hatchedEggs", globalData.getHatchedEggs());
+        theModel.addAttribute("discardedEggs", globalData.getDiscardedEggs());
 
 
         // Chickens
@@ -189,7 +199,8 @@ public class IndexController {
         int chickenCapacity = parameterService.findById(2).getParameterValue();
         theModel.addAttribute("chickenCapacity", chickenCapacity);
 
-        theModel.addAttribute("deadChicken", deadChicken);
+        theModel.addAttribute("deadChicken", globalData.getDeadChicken());
+        theModel.addAttribute("discardedChicken", globalData.getDiscardedChicken());
 
         return "main";
     }

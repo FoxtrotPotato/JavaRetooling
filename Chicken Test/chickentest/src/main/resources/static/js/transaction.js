@@ -1,17 +1,18 @@
-let typeObject = document.getElementById("type");
-let productObject = document.getElementById("product");
-let quantityObject = document.getElementById("quantity");
-let priceObject = document.getElementById("price");
-let subtotalObject = document.getElementById("subtotal");
-let observationsObject = document.getElementById("observations");
-let totalObject = document.getElementById("total");
+let typeElement = document.getElementById("type");
+let productElement = document.getElementById("product");
+let quantityElement = document.getElementById("quantity");
+let priceElement = document.getElementById("price");
+let subtotalElement = document.getElementById("subtotal");
+let observationsElement = document.getElementById("observations");
+let totalElement = document.getElementById("total");
+let messageElement = document.getElementById("message");
 let csrfToken;
 let csrfHeader;
 
-productObject.addEventListener("change", getPrice);
-typeObject.addEventListener("change", calculateSubtotal);
-quantityObject.addEventListener("change", calculateSubtotal);
-priceObject.addEventListener("change", calculateSubtotal);
+productElement.addEventListener("change", getPrice);
+typeElement.addEventListener("change", calculateSubtotal);
+quantityElement.addEventListener("change", calculateSubtotal);
+priceElement.addEventListener("change", calculateSubtotal);
 document.getElementById("save").addEventListener("click", save);
 
 
@@ -28,7 +29,7 @@ function configureCsrfToken() {
 configureCsrfToken();
 
 function getPrice() {
-    const theProductId = parseInt(productObject.value);
+    const theProductId = parseInt(productElement.value);
     console.log(theProductId);
 
     fetch(`/api/transactions/getPrice?productId=${theProductId}`)
@@ -41,7 +42,7 @@ function getPrice() {
         .then(function (data) {
                 const price = data;
                 console.log(price);
-                priceObject.value = parseFloat(price).toFixed(2);
+                priceElement.value = parseFloat(price).toFixed(2);
             }
         ).catch(function (error) {
         console.error(error)
@@ -49,48 +50,57 @@ function getPrice() {
 }
 
 function calculateSubtotal() {
-    let tempQuantity = parseFloat(quantityObject.value);
-    let tempPrice = parseFloat(priceObject.value);
+    let tempQuantity = parseFloat(quantityElement.value);
+    let tempPrice = parseFloat(priceElement.value);
     let tempSubtotal = tempQuantity * tempPrice;
     if (tempQuantity > 0 && tempPrice > 0) {
-        subtotalObject.innerHTML = tempSubtotal.toFixed(2);
+        subtotalElement.innerHTML = tempSubtotal.toFixed(2);
         calculateTotal();
     }
 }
 
 function calculateTotal() {
-    let tempType = typeObject.options[typeObject.selectedIndex].text;
-    let tempTotal = parseFloat(subtotalObject.textContent);
+    let tempType = typeElement.options[typeElement.selectedIndex].text;
+    let tempTotal = parseFloat(subtotalElement.textContent);
     if (tempType === "PURCHASE") {
         tempTotal *= -1;
     }
-    totalObject.innerHTML = tempTotal.toFixed(2);
+    totalElement.innerHTML = tempTotal.toFixed(2);
 }
 
 function save() {
-    let type = typeObject.options[typeObject.selectedIndex].text;
-    let product = parseInt(productObject.value);
-    let quantity = parseFloat(quantityObject.value);
-    let price = parseFloat(priceObject.value);
-    let observations = observationsObject.value;
-    let subTotal = parseFloat(subtotalObject.textContent);
-    let total = parseFloat(totalObject.textContent);
+    let type = typeElement.options[typeElement.selectedIndex].text;
+    let product = parseInt(productElement.value);
+    let quantity = parseFloat(quantityElement.value);
+    let price = parseFloat(priceElement.value);
+    let observations = observationsElement.value;
+    let subTotal = parseFloat(subtotalElement.textContent);
+    let total = parseFloat(totalElement.textContent);
 
-    if (type !== "" && product > 0 && quantity > 0 && price > 0) {
-        let data = {
-            type: type,
-            product: product,
-            quantity: quantity,
-            price: price,
-            subtotal: subTotal,
-            total: total,
-            observations: observations
-        };
+    let data = {
+        type: type,
+        product: product,
+        quantity: quantity,
+        price: price,
+        subtotal: subTotal,
+        total: total,
+        observations: observations
+    };
 
-        let jsonData = JSON.stringify(data);
+    let jsonData = JSON.stringify(data);
 
-        console.log(jsonData);
+    console.log(jsonData);
 
+    if (product !== 1 && product !== 2) {
+        messageElement.innerHTML = "ERROR: Must select a product!";
+        messageElement.style.display = "block";
+    } else if (!(quantity > 0)) {
+        messageElement.innerHTML = "ERROR: Must set a quantity!";
+        messageElement.style.display = "block";
+    } else if (!(price > 0)) {
+        messageElement.innerHTML = "ERROR: Must set a price!";
+        messageElement.style.display = "block";
+    } else {
         $.ajax({
             type: 'POST',
             url: '/api/transactions/save',
@@ -103,11 +113,12 @@ function save() {
             },
             error: function (xhr, status, error) {
                 console.log("Error en la solicitud AJAX:", error);
+                console.log(error);
+                console.log(status);
+                console.log(xhr);
+                $('#message').html("ERROR: " + xhr.responseText).show();
             }
         });
-    } else {
-        alert("Error. Missing Data. \n " +
-            "Type, Product and Quantity must be filled.");
     }
 
 }

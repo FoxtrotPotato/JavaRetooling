@@ -1,6 +1,7 @@
-package com.foxtrotpotato.chickentest.rest.restservice;
+package com.foxtrotpotato.chickentest.rest.restservice.restServiceImpl;
 
 import com.foxtrotpotato.chickentest.entity.*;
+import com.foxtrotpotato.chickentest.rest.restservice.TransactionRestService;
 import com.foxtrotpotato.chickentest.service.*;
 import com.foxtrotpotato.chickentest.util.GlobalData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,8 @@ public class TransactionRestServiceImpl implements TransactionRestService {
         try {
             System.out.println(json);
 
+            ResponseEntity message;
+
             // extract json data
             String balanceType = String.valueOf(json.get("type"));
             int productId = (int) json.get("product");
@@ -64,48 +67,62 @@ public class TransactionRestServiceImpl implements TransactionRestService {
             String observations = String.valueOf(json.get("observations"));
             Double subtotal = Double.parseDouble(String.valueOf(json.get("subtotal")));
             Double total = Double.parseDouble(String.valueOf(json.get("total")));
+
+            // get data
             LocalDateTime date = globalData.getCurrentDateTime();
             LocalDate currentDate = globalData.getCurrentDate();
+
             Farm theFarm = farmService.getFarmByLoggedUser();
 
-            // get farm parameters
             int maxCapacity = parameterService.findById(productId).getParameterValue();
 
-            // Update Product
-            productService.updateStock(balanceType, productId, quantity, maxCapacity);
             Product theProduct = productService.findById(productId);
 
-            // Transaction
             Transaction theTransaction = new Transaction(date, total, observations, theFarm);
-
-            // Transaction Details
             TransactionDetail theTransactionDetail = new TransactionDetail(theProduct, quantity, price, subtotal, theTransaction);
 
-            // Prepare Balance
             Double lastBalance = balanceService.getLastBalance();
             Balance theBalance = new Balance(balanceType, total + lastBalance, theTransaction, theFarm);
 
-            // Preview
-            System.out.println(theTransaction + "\n" + theTransactionDetail + "\n" + theBalance + "\n" + theProduct);
+            System.out.println("lastBalance =" +lastBalance);
+            System.out.println("subtotal = " + subtotal);
+            System.out.println("balanceType = " + balanceType);
 
-            transactionService.save(theTransaction);
-            System.out.println("transaction OK");
-            transactionDetailService.save(theTransactionDetail);
-            System.out.println("transaction detail OK");
-            balanceService.save(theBalance);
-            System.out.println("balance OK");
+            if (lastBalance < subtotal && balanceType.equals("PURCHASE")) {
+                message = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Not enough money");
+                System.out.println("Message: " + message);
 
-            // delete/add eggs/chicken
-            if (productId == 1) {
-                eggService.createDeleteEggs(balanceType, quantity, theProduct, theFarm, currentDate);
-            } else if (productId == 2) {
-                chickenService.createDeleteChickens(balanceType, quantity, theProduct, theFarm, currentDate);
+            } else if (theProduct.getProductStock() < quantity && balanceType.equals("SALE")) {
+                message = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Not enough cattle");
+                System.out.println("Message: " + message);
+
+            } else {
+                // Preview
+                System.out.println(theTransaction + "\n" + theTransactionDetail + "\n" + theBalance + "\n" + theProduct);
+
+                // save
+                productService.updateStock(balanceType, productId, quantity, maxCapacity);
+                transactionService.save(theTransaction);
+                System.out.println("transaction OK");
+                transactionDetailService.save(theTransactionDetail);
+                System.out.println("transaction detail OK");
+                balanceService.save(theBalance);
+                System.out.println("balance OK");
+
+                // delete/add eggs/chicken
+                if (productId == 1) {
+                    eggService.createDeleteEggs(balanceType, quantity, theProduct, theFarm, currentDate, maxCapacity);
+                } else if (productId == 2) {
+                    chickenService.createDeleteChickens(balanceType, quantity, theProduct, theFarm, currentDate, maxCapacity);
+                }
+
+                message = ResponseEntity.ok("Transaction saved successfully.");
             }
 
-            return ResponseEntity.ok("Los datos se han enviado correctamente.");
+            return message;
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ha ocurrido un error al guardar los datos.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while trying to save the transaction.");
         }
 
     }

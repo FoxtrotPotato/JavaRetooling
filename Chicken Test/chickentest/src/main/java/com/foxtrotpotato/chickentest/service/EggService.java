@@ -20,7 +20,7 @@ public interface EggService {
 
     int calculateEggAgeInDays(int theId, LocalDate currentDate);
 
-    void createDeleteEggs(String balanceType, int quantity, Product product, Farm farm, LocalDate currentDate);
+    void createDeleteEggs(String balanceType, int quantity, Product product, Farm farm, LocalDate currentDate, int maxCapacity);
 
     List<Egg> checkBirthdays(int eggLifeSpan, LocalDate currentDate);
 

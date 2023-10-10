@@ -31,42 +31,4 @@ public class UserController {
         return "users/list-users";
     }
 
-    @GetMapping("/showAddUserForm")
-    public String showFormForAdd(Model theModel) {
-
-        User theUser = new User();
-        theModel.addAttribute("user", theUser);
-
-        return "users/user-form";
-    }
-
-    @GetMapping("/showUpdateUserForm")
-    public String showFormForUpdate(@RequestParam("userId") int theId, Model theModel) {
-
-        User theUser = userService.findById(theId);
-        theModel.addAttribute("user", theUser);
-
-        return "users/user-form";
-    }
-
-    @GetMapping("/showUpdatePasswordForm")
-    public String showFormForPasswordUpdate(@RequestParam("userId") int theId, Model theModel) {
-
-        User theUser = userService.findById(theId);
-        theModel.addAttribute("user", theUser);
-
-        return "users/password-form";
-    }
-
-    @PostMapping("/save")
-    public String saveUser(@ModelAttribute("user") User theUser) {
-        userService.save(theUser);
-        return "redirect:/users/list";
-    }
-
-    @GetMapping("/delete")
-    public String delete(@RequestParam("userId") int theId) {
-        userService.deleteById(theId);
-        return "redirect:/users/list";
-    }
 }

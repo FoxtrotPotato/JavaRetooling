@@ -64,7 +64,7 @@
             <form class="input-group row mb-4 gy-1 gx-1 bg-outline-secondary flex-nowrap" action="/advanceDays"
                   method="post">
                 <div class="input-group-text col-auto fw-semibold">Advance</div>
-                <input type="number" class="form-control text-center w-25" name="daysToAdd" value="1">
+                <input type="number" class="form-control text-center w-25 col-2" name="daysToAdd" value="1">
                 <div class="input-group-text col-auto fw-semibold">days</div>
                 <button type="submit" class="btn btn-outline-secondary col-auto fw-semibold text-nowrap">Go >></button>
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -172,16 +172,14 @@
                                 <div class="card-body">
                                     <h1 class="card-title text-warning" th:text="${hatchedEggs}"></h1>
                                 </div>
-                                <div class="card-footer">
-                                    <small class="text-muted">Next: ##</small>
-                                </div>
+
                             </div>
                         </div>
                         <div class="col">
                             <div class="card text-center h-100 border-dark">
                                 <h5 class="card-header text-bg-dark text-nowrap">Discarded</h5>
                                 <div class="card-body">
-                                    <h1 class="card-title text-dark">##</h1>
+                                    <h1 class="card-title text-dark" th:text="${discardedEggs}"></h1>
                                 </div>
                             </div>
                         </div>
@@ -227,16 +225,13 @@
                                 <div class="card-body">
                                     <h1 class="card-title text-warning" th:text="${deadChicken}"></h1>
                                 </div>
-                                <div class="card-footer">
-                                    <small class="text-muted">Next: ##</small>
-                                </div>
                             </div>
                         </div>
                         <div class="col">
                             <div class="card text-center h-100 border-dark">
                                 <h5 class="card-header text-bg-dark text-nowrap">Discarded</h5>
                                 <div class="card-body">
-                                    <h1 class="card-title text-dark">##</h1>
+                                    <h1 class="card-title text-dark" th:text="${discardedChicken}"></h1>
                                 </div>
                             </div>
                         </div>

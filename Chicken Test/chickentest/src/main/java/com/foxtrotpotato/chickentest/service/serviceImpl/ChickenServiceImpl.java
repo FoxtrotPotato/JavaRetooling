@@ -82,7 +82,7 @@ public class ChickenServiceImpl implements ChickenService {
     }
 
     @Override
-    public void createDeleteChickens(String balanceType, int quantity, Product product, Farm farm, LocalDate currentDate) {
+    public void createDeleteChickens(String balanceType, int quantity, Product product, Farm farm, LocalDate currentDate, int maxCapacity) {
         if (balanceType.equals("SALE")) {
             for (int i = 0; i < quantity; i++) {
                 List<Chicken> chickensList = findAll();
@@ -93,11 +93,13 @@ public class ChickenServiceImpl implements ChickenService {
             }
         } else {
             for (int i = 0; i < quantity; i++) {
-                Chicken theChicken = new Chicken();
-                theChicken.setChickenBirthDay(currentDate);
-                theChicken.setProduct(product);
-                theChicken.setFarm(farm);
-                save(theChicken);
+                if (product.getProductStock() < maxCapacity) {
+                    Chicken theChicken = new Chicken();
+                    theChicken.setChickenBirthDay(currentDate);
+                    theChicken.setProduct(product);
+                    theChicken.setFarm(farm);
+                    save(theChicken);
+                }
             }
         }
     }

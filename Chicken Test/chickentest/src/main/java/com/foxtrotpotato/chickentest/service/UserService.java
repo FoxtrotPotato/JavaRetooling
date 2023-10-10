@@ -9,8 +9,5 @@ public interface UserService {
     List<User> findAll();
     User findById(int theId);
     User findByUserName(String theUsername);
-    void save(User theUser);
-    void deleteById(int theId);
-
 
 }

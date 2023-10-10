@@ -3,6 +3,7 @@ package com.foxtrotpotato.chickentest.service.serviceImpl;
 import com.foxtrotpotato.chickentest.repository.ProductRepository;
 import com.foxtrotpotato.chickentest.entity.Product;
 import com.foxtrotpotato.chickentest.service.ProductService;
+import com.foxtrotpotato.chickentest.util.GlobalData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,12 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final GlobalData globalData;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository theProductRepository) {
+    public ProductServiceImpl(ProductRepository theProductRepository, GlobalData globalData) {
         productRepository = theProductRepository;
+        this.globalData = globalData;
     }
 
     @Override
@@ -67,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
 
         System.out.println("tempstock: " + tempStock);
 
-        if (balanceType.equals("SALE") || balanceType.equals("HATCH") || balanceType.equals("DEATH")){
+        if (balanceType.equals("SALE") || balanceType.equals("HATCH") || balanceType.equals("DEATH")) {
             if (tempStock >= quantity) {
                 tempStock = tempStock - quantity;
 
@@ -80,6 +83,22 @@ public class ProductServiceImpl implements ProductService {
             if (tempStock > maxCapacity) {
                 excess = tempStock - maxCapacity;
                 tempStock = tempStock - excess;
+
+                System.out.println(productId);
+
+                switch (productId) {
+                    case 1:
+                        globalData.setDiscardedEggs(globalData.getDiscardedEggs() + excess);
+                        System.out.println(globalData.getDiscardedEggs());
+                        break;
+
+                    case 2:
+                        globalData.setDiscardedChicken(globalData.getDiscardedChicken() + excess);
+                        System.out.println(globalData.getDiscardedChicken());
+                        break;
+
+                }
+
                 response = ResponseEntity.ok("Product updated successfully. \n" +
                         theProduct.getProductName() + "/s surplus sent to the nearest charity centre: " + excess);
             }

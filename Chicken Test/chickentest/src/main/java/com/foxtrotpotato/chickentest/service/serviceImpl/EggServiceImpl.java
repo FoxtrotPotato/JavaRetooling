@@ -1,19 +1,17 @@
 package com.foxtrotpotato.chickentest.service.serviceImpl;
 
-import com.foxtrotpotato.chickentest.repository.EggRepository;
 import com.foxtrotpotato.chickentest.entity.Egg;
 import com.foxtrotpotato.chickentest.entity.Farm;
 import com.foxtrotpotato.chickentest.entity.Product;
+import com.foxtrotpotato.chickentest.repository.EggRepository;
 import com.foxtrotpotato.chickentest.service.EggService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,14 +73,14 @@ public class EggServiceImpl implements EggService {
     }
 
     @Override
-    public void deleteList(List<Egg> eggsList){
-        for (Egg egg : eggsList){
+    public void deleteList(List<Egg> eggsList) {
+        for (Egg egg : eggsList) {
             deleteById(egg.getEggId());
         }
     }
 
     @Override
-    public void createDeleteEggs(String balanceType, int quantity, Product product, Farm farm, LocalDate currentDate) {
+    public void createDeleteEggs(String balanceType, int quantity, Product product, Farm farm, LocalDate currentDate, int maxCapacity) {
         if (balanceType.equals("SALE")) {
             for (int i = 0; i < quantity; i++) {
                 List<Egg> eggsList = findAll();
@@ -93,11 +91,13 @@ public class EggServiceImpl implements EggService {
             }
         } else {
             for (int i = 0; i < quantity; i++) {
-                Egg theEgg = new Egg();
-                theEgg.setEggBirthDay(currentDate);
-                theEgg.setProduct(product);
-                theEgg.setFarm(farm);
-                save(theEgg);
+                if (product.getProductStock() < maxCapacity) {
+                    Egg theEgg = new Egg();
+                    theEgg.setEggBirthDay(currentDate);
+                    theEgg.setProduct(product);
+                    theEgg.setFarm(farm);
+                    save(theEgg);
+                }
             }
         }
     }
