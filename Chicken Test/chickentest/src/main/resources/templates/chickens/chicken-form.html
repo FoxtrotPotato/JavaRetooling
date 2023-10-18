@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <!-- Required meta tags -->
@@ -38,13 +38,19 @@
             <div class="container row gap-2">
                 <a type="button" class="btn-close col gx-5" data-bs-toggle="collapse" href="#collapseMenu" role="button"
                    aria-expanded="false" aria-controls="collapseMenu"></a>
-                <a href="/balances/list" class="btn btn-primary btn-sm mb-3 col p-2">Balances</a>
-                <a href="/eggs/list" class="btn btn-warning btn-sm mb-3 col p-2">Eggs</a>
-                <a href="/logs/list" class="btn btn-danger btn-sm mb-3 col p-2">Logs</a>
+                <a sec:authorize="hasAuthority('MANAGER')" href="/balances/list"
+                   class="btn btn-warning btn-sm mb-3 col p-2">Balances</a>
+                <a href="/eggs/list" class="btn btn-primary btn-sm mb-3 col p-2">Eggs</a>
+                <a sec:authorize="hasAuthority('ADMIN')" href="/logs/list"
+                   class="btn btn-danger btn-sm mb-3 col p-2">Logs</a>
                 <a href="/products/list" class="btn btn-primary btn-sm mb-3 col p-2">Products</a>
                 <a href="/parameters/list" class="btn btn-primary btn-sm mb-3 col p-2">Parameters</a>
                 <a href="/transactions/list" class="btn btn-primary btn-sm mb-3 col p-2">Transactions</a>
-                <a href="/users/list" class="btn btn-primary btn-sm mb-3 col p-2">Users</a>
+                <a sec:authorize="hasAuthority('ADMIN')" href="/users/list"
+                   class="btn btn-danger btn-sm mb-3 col p-2">Users</a>
+                <div class="container col-auto">
+                    <a class="btn btn-sm btn-outline-dark" th:href="@{/logout}" role="button"> Log Out</a>
+                </div>
             </div>
         </div>
     </div>
@@ -53,18 +59,18 @@
 <div class="container">
     <div class="container">
         <br>
-        <form action="#" th:action="@{/chickens/save}" th:object="${chicken}" method="POST">
+        <form id="inputForm" action="#" th:action="@{/chickens/save}" th:object="${chicken}" method="POST">
             <div class="form-floating mb-3">
                 <input type="text" class="form-control mb-4 w-25" id="chickenId" th:field="*{chickenId}" th:readonly="${true}"
                        placeholder="Id" disabled="disabled">
                 <label for="chickenId">Id</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control mb-4 w-25" id="chickenBirthDay" th:field="*{chickenBirthDay}"
+                <input type="text" class="form-control mb-4 w-25" id="birthDay" th:field="*{chickenBirthDay}"
                        placeholder="Stock">
-                <label for="chickenBirthDay">Birthday</label>
+                <label for="birthDay">Birthday</label>
             </div>
-            <button type="submit" class="btn btn-primary col-2 p-2">Save</button>
+            <button id="submitBtn" type="submit" class="btn btn-primary col-2 p-2" disabled>Save</button>
 
             <input type="hidden" th:field="*{chickenId}"/>
             <input type="hidden" th:field="*{product.productId}" class="form-control mb-4 w-25">
@@ -79,6 +85,7 @@
     </footer>
 </div>
 
+<script src="../js/validation/dateValidation.js"></script>
 </body>
 
 </html>

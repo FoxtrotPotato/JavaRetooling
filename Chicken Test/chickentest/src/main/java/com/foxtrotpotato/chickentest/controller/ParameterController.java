@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/parameters")
 public class ParameterController {
 
-    private ParameterService parameterService;
+    private final ParameterService parameterService;
 
     @Autowired
     public ParameterController(ParameterService theParameterService) {
@@ -29,7 +29,6 @@ public class ParameterController {
 
     @GetMapping("/showAddParameterForm")
     public String showFormForAdd(Model theModel) {
-
         Parameter theParameter = new Parameter();
         theModel.addAttribute("parameter", theParameter);
 
@@ -38,7 +37,6 @@ public class ParameterController {
 
     @GetMapping("/showUpdateParameterForm")
     public String showFormForUpdate(@RequestParam("parameterId") int theId, Model theModel) {
-
         Parameter theParameter = parameterService.findById(theId);
         theModel.addAttribute("parameter", theParameter);
 

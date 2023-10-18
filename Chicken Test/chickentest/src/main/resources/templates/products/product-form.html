@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <!-- Required meta tags -->
@@ -38,13 +38,19 @@
             <div class="container row gap-2">
                 <a type="button" class="btn-close col gx-5" data-bs-toggle="collapse" href="#collapseMenu" role="button"
                    aria-expanded="false" aria-controls="collapseMenu"></a>
-                <a href="/balances/list" class="btn btn-primary btn-sm mb-3 col p-2">Balances</a>
-                <a href="/chickens/list" class="btn btn-warning btn-sm mb-3 col p-2">Chickens</a>
-                <a href="/eggs/list" class="btn btn-warning btn-sm mb-3 col p-2">Eggs</a>
-                <a href="/logs/list" class="btn btn-danger btn-sm mb-3 col p-2">Logs</a>
+                <a sec:authorize="hasAuthority('MANAGER')" href="/balances/list"
+                   class="btn btn-warning btn-sm mb-3 col p-2">Balances</a>
+                <a href="/chickens/list" class="btn btn-primary btn-sm mb-3 col p-2">Chickens</a>
+                <a href="/eggs/list" class="btn btn-primary btn-sm mb-3 col p-2">Eggs</a>
+                <a sec:authorize="hasAuthority('ADMIN')" href="/logs/list"
+                   class="btn btn-danger btn-sm mb-3 col p-2">Logs</a>
                 <a href="/parameters/list" class="btn btn-primary btn-sm mb-3 col p-2">Parameters</a>
                 <a href="/transactions/list" class="btn btn-primary btn-sm mb-3 col p-2">Transactions</a>
-                <a href="/users/list" class="btn btn-primary btn-sm mb-3 col p-2">Users</a>
+                <a sec:authorize="hasAuthority('ADMIN')" href="/users/list"
+                   class="btn btn-danger btn-sm mb-3 col p-2">Users</a>
+                <div class="container col-auto">
+                    <a class="btn btn-sm btn-outline-dark" th:href="@{/logout}" role="button"> Log Out</a>
+                </div>
             </div>
         </div>
     </div>
@@ -53,26 +59,28 @@
 <div class="container">
     <div class="container">
         <br>
-        <form action="#" th:action="@{/products/save}" th:object="${product}" method="POST">
+        <form id="inputForm" action="#" th:action="@{/products/save}" th:object="${product}" method="POST">
             <div class="form-floating mb-3">
                 <input type="text" class="form-control mb-4 w-25" id="productName" th:field="*{productName}"
-                       placeholder="Name">
+                       placeholder="Name" disabled="disabled">
                 <label for="productName">Name</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="number" step="0.01" class="form-control mb-4 w-25" id="productValue"
-                       th:field="*{productValue}"
-                       placeholder="Value">
-                <label for="productValue">Value</label>
-            </div>
-            <div class="form-floating mb-3">
                 <input type="number" class="form-control mb-4 w-25" id="productStock" th:field="*{productStock}"
-                       placeholder="Stock">
+                       placeholder="Stock" disabled="disabled">
                 <label for="productStock">Stock</label>
             </div>
-            <button type="submit" class="btn btn-primary col-2 p-2">Save</button>
+            <div class="form-floating mb-3">
+                <input type="number" step="0.01" class="form-control mb-4 w-25" id="pValue"
+                       th:field="*{productValue}"
+                       placeholder="Value">
+                <label for="pValue">Value</label>
+            </div>
+            <button id="submitBtn" type="submit" class="btn btn-primary col-2 p-2" disabled>Save</button>
 
             <input type="hidden" th:field="*{productId}">
+            <input type="hidden" th:field="*{productName}">
+            <input type="hidden" th:field="*{productStock}">
             <input type="hidden" th:field="*{farm.farmId}">
             <input type="hidden" th:field="*{farm.farmName}">
         </form>
@@ -85,6 +93,9 @@
             2023. </a>
     </footer>
 </div>
+
+<script src="../js/validation/valueValidation.js"></script>
+
 </body>
 
 </html>

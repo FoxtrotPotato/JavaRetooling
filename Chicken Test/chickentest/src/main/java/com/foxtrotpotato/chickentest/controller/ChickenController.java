@@ -1,13 +1,12 @@
 package com.foxtrotpotato.chickentest.controller;
 
 import com.foxtrotpotato.chickentest.entity.Chicken;
-import com.foxtrotpotato.chickentest.entity.Farm;
-import com.foxtrotpotato.chickentest.entity.Product;
 import com.foxtrotpotato.chickentest.service.ChickenService;
 import com.foxtrotpotato.chickentest.service.FarmService;
 import com.foxtrotpotato.chickentest.service.ProductService;
 import com.foxtrotpotato.chickentest.util.GlobalData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +34,7 @@ public class ChickenController {
         this.farmService = farmService;
     }
 
+    @PreAuthorize("hasRole('EMPLOYEE')")
     @GetMapping(value = {"/", "/list"})
     public String listChicken(Model theModel) {
         List<Chicken> theChickens = chickenService.findAll();
@@ -57,9 +57,9 @@ public class ChickenController {
         return "chickens/list-chickens";
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/showUpdateChickenForm")
     public String showFormForUpdate(@RequestParam("chickenId") int theId, Model theModel) {
-
         Chicken theChicken = chickenService.findById(theId);
         theModel.addAttribute("chicken", theChicken);
 
@@ -68,18 +68,10 @@ public class ChickenController {
 
     @PostMapping("/save")
     public String saveChicken(@ModelAttribute("chicken") Chicken theChicken) {
-
         theChicken.setProduct(productService.findById(theChicken.getProduct().getProductId()));
-
         theChicken.setFarm(farmService.getFarmByLoggedUser());
 
         chickenService.save(theChicken);
-        return "redirect:/chickens/list";
-    }
-
-    @GetMapping("/delete")
-    public String delete(@RequestParam("chickenId") int theId) {
-        chickenService.deleteById(theId);
         return "redirect:/chickens/list";
     }
 

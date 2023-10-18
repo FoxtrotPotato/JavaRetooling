@@ -1,12 +1,12 @@
 package com.foxtrotpotato.chickentest.controller;
 
 import com.foxtrotpotato.chickentest.entity.Egg;
-import com.foxtrotpotato.chickentest.entity.Farm;
 import com.foxtrotpotato.chickentest.service.EggService;
 import com.foxtrotpotato.chickentest.service.FarmService;
 import com.foxtrotpotato.chickentest.service.ProductService;
 import com.foxtrotpotato.chickentest.util.GlobalData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/eggs")
 public class EggController {
 
-    private EggService eggService;
+    private final EggService eggService;
     private final GlobalData globalData;
     private final ProductService productService;
     private final FarmService farmService;
@@ -34,6 +34,7 @@ public class EggController {
         this.farmService = farmService;
     }
 
+    @PreAuthorize("hasRole('EMPLOYEE')")
     @GetMapping("/list")
     public String listEgg(Model theModel) {
         List<Egg> theEggs = eggService.findAll();
@@ -55,9 +56,9 @@ public class EggController {
         return "eggs/list-eggs";
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/showUpdateEggForm")
     public String showFormForUpdate(@RequestParam("eggId") int theId, Model theModel) {
-
         Egg theEgg = eggService.findById(theId);
         theModel.addAttribute("egg", theEgg);
 
@@ -67,16 +68,9 @@ public class EggController {
     @PostMapping("/save")
     public String saveEgg(@ModelAttribute("egg") Egg theEgg) {
         theEgg.setProduct(productService.findById(theEgg.getProduct().getProductId()));
-
         theEgg.setFarm(farmService.getFarmByLoggedUser());
 
         eggService.save(theEgg);
-        return "redirect:/eggs/list";
-    }
-
-    @GetMapping("/delete")
-    public String delete(@RequestParam("eggId") int theId) {
-        eggService.deleteById(theId);
         return "redirect:/eggs/list";
     }
 

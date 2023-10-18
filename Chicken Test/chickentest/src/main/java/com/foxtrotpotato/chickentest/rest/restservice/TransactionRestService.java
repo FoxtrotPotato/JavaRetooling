@@ -6,14 +6,14 @@ import java.util.Map;
 
 public interface TransactionRestService {
 
-    public ResponseEntity<String> saveTransaction(Map<String, Object> json);
+    ResponseEntity<String> saveTransaction(Map<String, Object> json);
 
     int eggSalesCount();
 
-    public int eggPurchasesCount();
+    int eggPurchasesCount();
 
-    public int chickenSalesCount();
+    int chickenSalesCount();
 
-    public int chickenPurchasesCount();
+    int chickenPurchasesCount();
 
 }

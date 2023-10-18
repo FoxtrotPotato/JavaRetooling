@@ -1,26 +1,23 @@
 package com.foxtrotpotato.chickentest.service.serviceImpl;
 
-import com.foxtrotpotato.chickentest.repository.ChickenRepository;
 import com.foxtrotpotato.chickentest.entity.Chicken;
 import com.foxtrotpotato.chickentest.entity.Farm;
 import com.foxtrotpotato.chickentest.entity.Product;
+import com.foxtrotpotato.chickentest.repository.ChickenRepository;
 import com.foxtrotpotato.chickentest.service.ChickenService;
+import com.foxtrotpotato.chickentest.util.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
 public class ChickenServiceImpl implements ChickenService {
-
-
-    private ChickenRepository chickenRepository;
+    private final ChickenRepository chickenRepository;
 
     @Autowired
     public ChickenServiceImpl(ChickenRepository theChickenRepository) {
@@ -35,13 +32,12 @@ public class ChickenServiceImpl implements ChickenService {
     @Override
     public Chicken findById(int theId) {
         Optional<Chicken> result = chickenRepository.findById(theId);
-
         Chicken theChicken;
 
         if (result.isPresent()) {
             theChicken = result.get();
         } else {
-            throw new RuntimeException("Did not find Chicken id - " + theId);
+            throw new ObjectNotFoundException("Did not find Chicken id - " + theId);
         }
 
         return theChicken;
@@ -65,16 +61,19 @@ public class ChickenServiceImpl implements ChickenService {
     }
 
     @Override
+    @Transactional
     public void save(Chicken theChicken) {
         chickenRepository.save(theChicken);
     }
 
     @Override
+    @Transactional
     public void deleteById(int theId) {
         chickenRepository.deleteById(theId);
     }
 
     @Override
+    @Transactional
     public void deleteList(List<Chicken> chickenList) {
         for (Chicken chicken : chickenList) {
             deleteById(chicken.getChickenId());
@@ -82,6 +81,7 @@ public class ChickenServiceImpl implements ChickenService {
     }
 
     @Override
+    @Transactional
     public void createDeleteChickens(String balanceType, int quantity, Product product, Farm farm, LocalDate currentDate, int maxCapacity) {
         if (balanceType.equals("SALE")) {
             for (int i = 0; i < quantity; i++) {

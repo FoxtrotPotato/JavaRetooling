@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-
     private final ProductRepository productRepository;
     private final GlobalData globalData;
 
@@ -32,7 +32,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product findById(int theId) {
         Optional<Product> result = productRepository.findById(theId);
-
         Product theProduct;
 
         if (result.isPresent()) {
@@ -45,23 +44,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public void save(Product theProduct) {
         productRepository.save(theProduct);
     }
 
     @Override
+    @Transactional
     public void deleteById(int theId) {
         productRepository.deleteById(theId);
     }
 
     @Override
-    public void deleteList(List<Product> products) {
-        for (Product product : products) {
-            productRepository.deleteById(product.getProductId());
-        }
-    }
-
-    @Override
+    @Transactional
     public ResponseEntity<String> updateStock(String balanceType, int productId, int quantity, int maxCapacity) {
         Product theProduct = findById(productId);
         int excess;
@@ -87,16 +82,14 @@ public class ProductServiceImpl implements ProductService {
                 System.out.println(productId);
 
                 switch (productId) {
-                    case 1:
+                    case 1 -> {
                         globalData.setDiscardedEggs(globalData.getDiscardedEggs() + excess);
                         System.out.println(globalData.getDiscardedEggs());
-                        break;
-
-                    case 2:
+                    }
+                    case 2 -> {
                         globalData.setDiscardedChicken(globalData.getDiscardedChicken() + excess);
                         System.out.println(globalData.getDiscardedChicken());
-                        break;
-
+                    }
                 }
 
                 response = ResponseEntity.ok("Product updated successfully. \n" +

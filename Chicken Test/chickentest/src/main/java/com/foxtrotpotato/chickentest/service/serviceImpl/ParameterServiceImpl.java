@@ -5,6 +5,7 @@ import com.foxtrotpotato.chickentest.entity.Parameter;
 import com.foxtrotpotato.chickentest.service.ParameterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,7 @@ import java.util.Optional;
 @Service
 public class ParameterServiceImpl implements ParameterService {
 
-    private ParameterRepository parameterRepository;
+    private final ParameterRepository parameterRepository;
 
     @Autowired
     public ParameterServiceImpl(ParameterRepository theParameterRepository) {
@@ -27,8 +28,7 @@ public class ParameterServiceImpl implements ParameterService {
     @Override
     public Parameter findById(int theId) {
         Optional<Parameter> result = parameterRepository.findById(theId);
-
-        Parameter theParameter = null;
+        Parameter theParameter;
 
         if (result.isPresent()) {
             theParameter = result.get();
@@ -41,11 +41,13 @@ public class ParameterServiceImpl implements ParameterService {
     }
 
     @Override
+    @Transactional
     public void save(Parameter theParameter) {
         parameterRepository.save(theParameter);
     }
 
     @Override
+    @Transactional
     public void deleteById(int theId) {
         parameterRepository.deleteById(theId);
     }

@@ -2,33 +2,39 @@ package com.foxtrotpotato.chickentest.entity;
 
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name="logs")
+@Table(name = "logs")
 public class Log {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="log_id")
+    @Column(name = "log_id")
     private int logId;
 
-    @Column(name="log_detail")
+    @Column(name = "log_detail")
     private String logDetail;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="log_timestamp")
-    private Timestamp logTimestamp;
+    @Column(name = "log_timestamp")
+    private LocalDateTime logTimestamp;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Log(){}
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "farm_id")
+    private Farm farm;
 
-    public Log(String logDetail, Timestamp logTimestamp) {
+    public Log() {
+    }
+
+    public Log(String logDetail, LocalDateTime logTimestamp, User user, Farm farm) {
         this.logDetail = logDetail;
         this.logTimestamp = logTimestamp;
+        this.user = user;
+        this.farm = farm;
     }
 
     public int getLogId() {
@@ -47,11 +53,11 @@ public class Log {
         this.logDetail = logDetail;
     }
 
-    public Timestamp getLogTimestamp() {
+    public LocalDateTime getLogTimestamp() {
         return logTimestamp;
     }
 
-    public void setLogTimestamp(Timestamp logTimestamp) {
+    public void setLogTimestamp(LocalDateTime logTimestamp) {
         this.logTimestamp = logTimestamp;
     }
 
@@ -63,6 +69,15 @@ public class Log {
         this.user = user;
     }
 
+
+    public Farm getFarm() {
+        return farm;
+    }
+
+    public void setFarm(Farm farm) {
+        this.farm = farm;
+    }
+
     @Override
     public String toString() {
         return "Log{" +
@@ -72,4 +87,5 @@ public class Log {
                 ", user=" + user +
                 '}';
     }
+
 }

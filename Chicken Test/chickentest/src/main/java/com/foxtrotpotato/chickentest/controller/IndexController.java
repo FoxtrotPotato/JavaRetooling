@@ -2,12 +2,12 @@ package com.foxtrotpotato.chickentest.controller;
 
 import com.foxtrotpotato.chickentest.entity.Chicken;
 import com.foxtrotpotato.chickentest.entity.Egg;
-import com.foxtrotpotato.chickentest.entity.Parameter;
 import com.foxtrotpotato.chickentest.rest.restservice.TransactionRestService;
 import com.foxtrotpotato.chickentest.service.*;
 import com.foxtrotpotato.chickentest.util.GlobalData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,27 +17,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
 
 @Controller
 public class IndexController {
-
-    private final TransactionService transactionService;
     private final TransactionRestService transactionRestService;
     private final ProductService productService;
     private final BalanceService balanceService;
     private final EggService eggService;
     private final ChickenService chickenService;
-    private final TransactionDetailService transactionDetailService;
     private final ParameterService parameterService;
     private final FarmService farmService;
-    private GlobalData globalData;
+    private final GlobalData globalData;
 
     @Autowired
-    public IndexController(TransactionService transactionService,
-                           TransactionDetailService transactionDetailService,
-                           TransactionRestService transactionRestService,
+    public IndexController(TransactionRestService transactionRestService,
                            ProductService productService,
                            BalanceService balanceService,
                            EggService eggService,
@@ -45,8 +41,6 @@ public class IndexController {
                            ParameterService parameterService,
                            FarmService farmService,
                            GlobalData globalData) {
-        this.transactionService = transactionService;
-        this.transactionDetailService = transactionDetailService;
         this.transactionRestService = transactionRestService;
         this.productService = productService;
         this.balanceService = balanceService;
@@ -72,9 +66,9 @@ public class IndexController {
 
     @PostMapping("/advanceDays")
     public String advanceDays(@RequestParam("daysToAdd") int daysToAdd) {
-        LocalDate tempDate = globalData.currentDate.plusDays(daysToAdd);
+        LocalDate tempDate = GlobalData.currentDate.plusDays(daysToAdd);
         globalData.setCurrentDate(tempDate);
-        LocalDateTime tempDateTime = globalData.currentDateTime.plusDays(daysToAdd);
+        LocalDateTime tempDateTime = GlobalData.currentDateTime.plusDays(daysToAdd);
         globalData.setCurrentDateTime(tempDateTime);
 
         hatchEggs();
@@ -97,7 +91,6 @@ public class IndexController {
             for (int i = 0; i < hatchedEggsQty; i++) {
                 System.out.println("hatch eggs temp stock=" + productService.findById(2).getProductStock());
                 System.out.println("hatch eggs temp capacity=" + tempChickenCapacity);
-
 
                 if (productService.findById(2).getProductStock() < tempChickenCapacity) {
                     Chicken newChicken = new Chicken(globalData.getCurrentDate(), farmService.getFarmByLoggedUser(), productService.findById(2));
@@ -141,12 +134,15 @@ public class IndexController {
 
 
     // main data board
+    @PreAuthorize("hasAnyRole('EMPLOYEE', 'MANAGER', 'ADMIN')")
     @GetMapping("/main")
     public String indexData(Model theModel) {
         DecimalFormat df = new DecimalFormat("0.00");
 
-        theModel.addAttribute("currentDate", GlobalData.currentDate);
-        System.out.println("fake date: " + GlobalData.currentDate);
+        DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String currentDate = GlobalData.currentDate.format(pattern);
+        theModel.addAttribute("currentDate", currentDate);
+        System.out.println("fake date: " + currentDate);
 
         // Farm
         String farmName = farmService.getFarmByLoggedUser().getFarmName();
@@ -168,7 +164,6 @@ public class IndexController {
         int purchasesCount = balanceService.countPurchasesBalances();
         theModel.addAttribute("purchasesCount", purchasesCount);
 
-
         // Eggs
         int eggsCount = productService.findById(1).getProductStock();
         theModel.addAttribute("eggsCount", eggsCount);
@@ -184,7 +179,6 @@ public class IndexController {
 
         theModel.addAttribute("hatchedEggs", globalData.getHatchedEggs());
         theModel.addAttribute("discardedEggs", globalData.getDiscardedEggs());
-
 
         // Chickens
         int chickensCount = productService.findById(2).getProductStock();

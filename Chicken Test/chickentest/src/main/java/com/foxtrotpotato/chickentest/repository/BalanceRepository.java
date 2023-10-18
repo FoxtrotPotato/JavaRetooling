@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface BalanceRepository extends JpaRepository<Balance, Integer> {
-    public List<Balance> findAllByOrderByBalanceIdDesc();
+    List<Balance> findAllByOrderByBalanceIdDesc();
 
 }

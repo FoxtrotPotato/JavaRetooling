@@ -20,7 +20,7 @@ public class GlobalData {
     }
 
     public void setCurrentDate(LocalDate currentDate) {
-        this.currentDate = currentDate;
+        GlobalData.currentDate = currentDate;
     }
 
     public LocalDateTime getCurrentDateTime() {
@@ -28,7 +28,7 @@ public class GlobalData {
     }
 
     public void setCurrentDateTime(LocalDateTime currentDateTime) {
-        this.currentDateTime = currentDateTime;
+        GlobalData.currentDateTime = currentDateTime;
     }
 
     public int getHatchedEggs() {
@@ -36,7 +36,7 @@ public class GlobalData {
     }
 
     public void setHatchedEggs(int hatchedEggs) {
-        this.hatchedEggs = hatchedEggs;
+        GlobalData.hatchedEggs = hatchedEggs;
     }
 
     public int getDeadChicken() {
@@ -44,7 +44,7 @@ public class GlobalData {
     }
 
     public void setDeadChicken(int deadChicken) {
-        this.deadChicken = deadChicken;
+        GlobalData.deadChicken = deadChicken;
     }
 
     public int getDiscardedEggs() {
@@ -52,7 +52,7 @@ public class GlobalData {
     }
 
     public void setDiscardedEggs(int discardedEggs) {
-        this.discardedEggs = discardedEggs;
+        GlobalData.discardedEggs = discardedEggs;
     }
 
     public int getDiscardedChicken() {
@@ -60,6 +60,6 @@ public class GlobalData {
     }
 
     public void setDiscardedChicken(int discardedChicken) {
-        this.discardedChicken = discardedChicken;
+        GlobalData.discardedChicken = discardedChicken;
     }
 }

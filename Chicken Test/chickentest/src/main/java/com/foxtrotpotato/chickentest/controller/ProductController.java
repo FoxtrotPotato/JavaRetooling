@@ -3,6 +3,7 @@ package com.foxtrotpotato.chickentest.controller;
 import com.foxtrotpotato.chickentest.entity.Product;
 import com.foxtrotpotato.chickentest.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,30 +13,23 @@ import java.util.List;
 @Controller
 @RequestMapping("/products")
 public class ProductController {
-
-    private ProductService productService;
+    private final ProductService productService;
 
     @Autowired
     public ProductController(ProductService theProductService) {
         productService = theProductService;
     }
 
+    @PreAuthorize("hasRole('EMPLOYEE')")
     @GetMapping("/list")
     public String listProduct(Model theModel) {
         List<Product> theProducts = productService.findAll();
         theModel.addAttribute("products", theProducts);
 
-        return "Products/list-Products";
+        return "products/list-products";
     }
 
-    @GetMapping("/showAddProductForm")
-    public String showFormForAdd(Model theModel) {
-        Product theProduct = new Product();
-        theModel.addAttribute("product", theProduct);
-
-        return "products/product-form";
-    }
-
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/showUpdateProductForm")
     public String showFormForUpdate(@RequestParam("productId") int theId, Model theModel) {
 
@@ -51,9 +45,4 @@ public class ProductController {
         return "redirect:/products/list";
     }
 
-    @GetMapping("/delete")
-    public String delete(@RequestParam("productId") int theId) {
-        productService.deleteById(theId);
-        return "redirect:/products/list";
-    }
 }

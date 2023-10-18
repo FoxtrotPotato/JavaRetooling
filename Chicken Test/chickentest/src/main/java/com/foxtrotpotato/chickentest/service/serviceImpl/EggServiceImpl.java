@@ -7,6 +7,7 @@ import com.foxtrotpotato.chickentest.repository.EggRepository;
 import com.foxtrotpotato.chickentest.service.EggService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -16,9 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class EggServiceImpl implements EggService {
-
-
-    private EggRepository eggRepository;
+    private final EggRepository eggRepository;
 
     @Autowired
     public EggServiceImpl(EggRepository theEggRepository) {
@@ -33,7 +32,6 @@ public class EggServiceImpl implements EggService {
     @Override
     public Egg findById(int theId) {
         Optional<Egg> result = eggRepository.findById(theId);
-
         Egg theEgg;
 
         if (result.isPresent()) {
@@ -63,16 +61,19 @@ public class EggServiceImpl implements EggService {
     }
 
     @Override
+    @Transactional
     public void save(Egg theEgg) {
         eggRepository.save(theEgg);
     }
 
     @Override
+    @Transactional
     public void deleteById(int theId) {
         eggRepository.deleteById(theId);
     }
 
     @Override
+    @Transactional
     public void deleteList(List<Egg> eggsList) {
         for (Egg egg : eggsList) {
             deleteById(egg.getEggId());
@@ -80,6 +81,7 @@ public class EggServiceImpl implements EggService {
     }
 
     @Override
+    @Transactional
     public void createDeleteEggs(String balanceType, int quantity, Product product, Farm farm, LocalDate currentDate, int maxCapacity) {
         if (balanceType.equals("SALE")) {
             for (int i = 0; i < quantity; i++) {

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <!-- Required meta tags -->
@@ -34,6 +34,7 @@
         <div class="container">
             <h4 class="text-center" th:text="${currentDate}"></h4>
         </div>
+
     </div>
 </div>
 
@@ -43,14 +44,20 @@
             <div class="container row gap-2">
                 <a type="button" class="btn-close col gx-5" data-bs-toggle="collapse" href="#collapseMenu" role="button"
                    aria-expanded="false" aria-controls="collapseMenu"></a>
-                <a href="/balances/list" class="btn btn-primary btn-sm mb-3 col p-2">Balances</a>
-                <a href="/chickens/list" class="btn btn-warning btn-sm mb-3 col p-2">Chickens</a>
-                <a href="/eggs/list" class="btn btn-warning btn-sm mb-3 col p-2">Eggs</a>
-                <a href="/logs/list" class="btn btn-danger btn-sm mb-3 col p-2">Logs</a>
+                <a sec:authorize="hasAuthority('MANAGER')" href="/balances/list"
+                   class="btn btn-warning btn-sm mb-3 col p-2">Balances</a>
+                <a href="/chickens/list" class="btn btn-primary btn-sm mb-3 col p-2">Chickens</a>
+                <a href="/eggs/list" class="btn btn-primary btn-sm mb-3 col p-2">Eggs</a>
+                <a sec:authorize="hasAuthority('ADMIN')" href="/logs/list"
+                   class="btn btn-danger btn-sm mb-3 col p-2">Logs</a>
                 <a href="/products/list" class="btn btn-primary btn-sm mb-3 col p-2">Products</a>
                 <a href="/parameters/list" class="btn btn-primary btn-sm mb-3 col p-2">Parameters</a>
                 <a href="/transactions/list" class="btn btn-primary btn-sm mb-3 col p-2">Transactions</a>
-                <a href="/users/list" class="btn btn-primary btn-sm mb-3 col p-2">Users</a>
+                <a sec:authorize="hasAuthority('ADMIN')" href="/users/list"
+                   class="btn btn-danger btn-sm mb-3 col p-2">Users</a>
+                <div class="container col-auto">
+                    <a class="btn btn-sm btn-outline-dark" th:href="@{/logout}" role="button"> Log Out</a>
+                </div>
             </div>
         </div>
     </div>
@@ -60,31 +67,35 @@
     <div class="container-fluid row">
         <div class="d-flex align-items-end flex-column">
             <br>
-        <div class="row">
-            <form class="input-group row mb-4 gy-1 gx-1 bg-outline-secondary flex-nowrap" action="/advanceDays"
-                  method="post">
-                <div class="input-group-text col-auto fw-semibold">Advance</div>
-                <input type="number" class="form-control text-center w-25 col-2" name="daysToAdd" value="1">
-                <div class="input-group-text col-auto fw-semibold">days</div>
-                <button type="submit" class="btn btn-outline-secondary col-auto fw-semibold text-nowrap">Go >></button>
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            </form>
-        </div>
+            <div class="row">
+                <form class="input-group row mb-4 gy-1 gx-1 bg-outline-secondary flex-nowrap" action="/advanceDays"
+                      method="post">
+                    <div class="input-group-text col-auto fw-semibold">Advance</div>
+                    <input type="number" class="form-control text-center w-25 col-2" name="daysToAdd" value="1">
+                    <div class="input-group-text col-auto fw-semibold">days</div>
+                    <button type="submit" class="btn btn-outline-secondary col-auto fw-semibold text-nowrap">Go >>
+                    </button>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                </form>
+            </div>
         </div>
     </div>
 
     <br>
     <div class="container">
 
-    <div class="container row gap-2">
-            <a href="/balances/list" class="btn btn-primary btn-sm mb-3 col p-2">Balances</a>
-            <a href="/chickens/list" class="btn btn-warning btn-sm mb-3 col p-2">Chickens</a>
-            <a href="/eggs/list" class="btn btn-warning btn-sm mb-3 col p-2">Eggs</a>
-            <a href="/logs/list" class="btn btn-danger btn-sm mb-3 col p-2">Logs</a>
+        <div class="container row gap-2">
+            <a sec:authorize="hasAuthority('MANAGER')" href="/balances/list"
+               class="btn btn-warning btn-sm mb-3 col p-2">Balances</a>
+            <a href="/chickens/list" class="btn btn-primary btn-sm mb-3 col p-2">Chickens</a>
+            <a href="/eggs/list" class="btn btn-primary btn-sm mb-3 col p-2">Eggs</a>
+            <a sec:authorize="hasAuthority('ADMIN')" href="/logs/list"
+               class="btn btn-danger btn-sm mb-3 col p-2">Logs</a>
             <a href="/products/list" class="btn btn-primary btn-sm mb-3 col p-2">Products</a>
             <a href="/parameters/list" class="btn btn-primary btn-sm mb-3 col p-2">Parameters</a>
             <a href="/transactions/list" class="btn btn-primary btn-sm mb-3 col p-2">Transactions</a>
-            <a href="/users/list" class="btn btn-primary btn-sm mb-3 col p-2">Users</a>
+            <a sec:authorize="hasAuthority('ADMIN')" href="/users/list"
+               class="btn btn-danger btn-sm mb-3 col p-2">Users</a>
         </div>
     </div>
     <hr>

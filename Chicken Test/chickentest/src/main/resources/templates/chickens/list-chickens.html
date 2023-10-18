@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <!-- Required meta tags -->
@@ -37,13 +37,19 @@
             <div class="container row gap-2">
                 <a type="button" class="btn-close col gx-5" data-bs-toggle="collapse" href="#collapseMenu" role="button"
                    aria-expanded="false" aria-controls="collapseMenu"></a>
-                <a href="/balances/list" class="btn btn-primary btn-sm mb-3 col p-2">Balances</a>
-                <a href="/eggs/list" class="btn btn-warning btn-sm mb-3 col p-2">Eggs</a>
-                <a href="/logs/list" class="btn btn-danger btn-sm mb-3 col p-2">Logs</a>
+                <a sec:authorize="hasAuthority('MANAGER')" href="/balances/list"
+                   class="btn btn-warning btn-sm mb-3 col p-2">Balances</a>
+                <a href="/eggs/list" class="btn btn-primary btn-sm mb-3 col p-2">Eggs</a>
+                <a sec:authorize="hasAuthority('ADMIN')" href="/logs/list"
+                   class="btn btn-danger btn-sm mb-3 col p-2">Logs</a>
                 <a href="/products/list" class="btn btn-primary btn-sm mb-3 col p-2">Products</a>
                 <a href="/parameters/list" class="btn btn-primary btn-sm mb-3 col p-2">Parameters</a>
                 <a href="/transactions/list" class="btn btn-primary btn-sm mb-3 col p-2">Transactions</a>
-                <a href="/users/list" class="btn btn-primary btn-sm mb-3 col p-2">Users</a>
+                <a sec:authorize="hasAuthority('ADMIN')" href="/users/list"
+                   class="btn btn-danger btn-sm mb-3 col p-2">Users</a>
+                <div class="container col-auto">
+                    <a class="btn btn-sm btn-outline-dark" th:href="@{/logout}" role="button"> Log Out</a>
+                </div>
             </div>
         </div>
     </div>
@@ -55,7 +61,7 @@
         <br>
         <div class="container row">
             <div class="col md-2 offset-md-10">
-                <div class="input-group">
+                <div class="input-group flex-nowrap">
                     <span class="input-group-text" id="basic-addon2">Total</span>
                     <span type="number" th:text="${chickens.size()}" class="form-control col-2 md-2 text-end"
                           readonly></span>
@@ -71,7 +77,7 @@
                 <th>#</th>
                 <th>Birthday</th>
                 <th>Age (days)</th>
-                <th>Action</th>
+                <th sec:authorize="hasAuthority('MANAGER')">Action</th>
             </tr>
             </thead>
 
@@ -83,6 +89,7 @@
                 <td th:text="${#strings.arraySplit(tempChicken, ',')[2]}"/>
                 <td>
                     <a th:href="@{/chickens/showUpdateChickenForm(chickenId=${#strings.arraySplit(tempChicken, ',')[0]})}"
+                       sec:authorize="hasAuthority('MANAGER')"
                        class="btn btn-info btn-sm">Update</a>
                 </td>
             </tr>

@@ -20,7 +20,6 @@ public class FarmServiceImpl implements FarmService {
         farmRepository = theFarmRepository;
     }
 
-
     public List<Farm> findAll() {
         return farmRepository.findAll();
     }
@@ -39,7 +38,6 @@ public class FarmServiceImpl implements FarmService {
 
     @Override
     public Farm getFarmByLoggedUser() {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println(authentication);
         Farm theFarm = null;

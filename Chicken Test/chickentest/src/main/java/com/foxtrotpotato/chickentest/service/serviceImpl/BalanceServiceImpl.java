@@ -5,6 +5,7 @@ import com.foxtrotpotato.chickentest.entity.Balance;
 import com.foxtrotpotato.chickentest.service.BalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,7 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
+    @Transactional
     public void save(Balance theBalance) {
         balanceRepository.save(theBalance);
     }

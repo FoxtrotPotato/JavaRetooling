@@ -5,6 +5,7 @@ import com.foxtrotpotato.chickentest.entity.TransactionDetail;
 import com.foxtrotpotato.chickentest.service.TransactionDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +42,7 @@ public class TransactionDetailServiceImpl implements TransactionDetailService {
 
 
     @Override
+    @Transactional
     public void save(TransactionDetail theTransactionDetail) {
         transactionDetailRepository.save(theTransactionDetail);
     }

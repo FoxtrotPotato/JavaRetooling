@@ -116,7 +116,7 @@ CREATE TABLE balances (
 
 CREATE TABLE logs (
   log_id INT NOT NULL AUTO_INCREMENT,
-  log_detail VARCHAR(200),
+  log_detail VARCHAR(250),
   log_timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   user_id INT NOT NULL,
   farm_id INT NOT NULL DEFAULT 1,

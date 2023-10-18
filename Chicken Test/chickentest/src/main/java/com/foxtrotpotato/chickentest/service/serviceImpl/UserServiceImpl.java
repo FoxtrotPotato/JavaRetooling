@@ -11,9 +11,7 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository theUserRepository) {
@@ -28,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(int theId) {
         Optional<User> result = userRepository.findById(theId);
-        User theUser = null;
+        User theUser;
         if (result.isPresent()) {
             theUser = result.get();
         }
@@ -41,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUserName(String theUsername) {
         Optional<User> result = userRepository.findByUsername(theUsername);
-        User theUser = null;
+        User theUser;
         if (result.isPresent()) {
             theUser = result.get();
         }

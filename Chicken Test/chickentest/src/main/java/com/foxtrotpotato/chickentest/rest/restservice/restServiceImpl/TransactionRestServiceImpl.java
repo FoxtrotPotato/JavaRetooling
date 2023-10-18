@@ -23,7 +23,6 @@ public class TransactionRestServiceImpl implements TransactionRestService {
     private final EggService eggService;
     private final ChickenService chickenService;
     private final TransactionDetailService transactionDetailService;
-    private final UserService userService;
     private final ParameterService parameterService;
     private final FarmService farmService;
     private final GlobalData globalData;
@@ -35,7 +34,6 @@ public class TransactionRestServiceImpl implements TransactionRestService {
                                       BalanceService balanceService,
                                       EggService eggService,
                                       ChickenService chickenService,
-                                      UserService userService,
                                       ParameterService parameterService,
                                       FarmService farmService,
                                       GlobalData globalData) {
@@ -45,7 +43,6 @@ public class TransactionRestServiceImpl implements TransactionRestService {
         this.balanceService = balanceService;
         this.chickenService = chickenService;
         this.eggService = eggService;
-        this.userService = userService;
         this.parameterService = parameterService;
         this.farmService = farmService;
         this.globalData = globalData;
@@ -57,7 +54,7 @@ public class TransactionRestServiceImpl implements TransactionRestService {
         try {
             System.out.println(json);
 
-            ResponseEntity message;
+            ResponseEntity<String> message;
 
             // extract json data
             String balanceType = String.valueOf(json.get("type"));
@@ -69,7 +66,7 @@ public class TransactionRestServiceImpl implements TransactionRestService {
             Double total = Double.parseDouble(String.valueOf(json.get("total")));
 
             // get data
-            LocalDateTime date = globalData.getCurrentDateTime();
+            LocalDateTime currentDateTime = globalData.getCurrentDateTime();
             LocalDate currentDate = globalData.getCurrentDate();
 
             Farm theFarm = farmService.getFarmByLoggedUser();
@@ -78,15 +75,11 @@ public class TransactionRestServiceImpl implements TransactionRestService {
 
             Product theProduct = productService.findById(productId);
 
-            Transaction theTransaction = new Transaction(date, total, observations, theFarm);
+            Transaction theTransaction = new Transaction(currentDateTime, total, observations, theFarm);
             TransactionDetail theTransactionDetail = new TransactionDetail(theProduct, quantity, price, subtotal, theTransaction);
 
             Double lastBalance = balanceService.getLastBalance();
             Balance theBalance = new Balance(balanceType, total + lastBalance, theTransaction, theFarm);
-
-            System.out.println("lastBalance =" +lastBalance);
-            System.out.println("subtotal = " + subtotal);
-            System.out.println("balanceType = " + balanceType);
 
             if (lastBalance < subtotal && balanceType.equals("PURCHASE")) {
                 message = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Not enough money");
@@ -100,29 +93,32 @@ public class TransactionRestServiceImpl implements TransactionRestService {
                 // Preview
                 System.out.println(theTransaction + "\n" + theTransactionDetail + "\n" + theBalance + "\n" + theProduct);
 
-                // save
-                productService.updateStock(balanceType, productId, quantity, maxCapacity);
-                transactionService.save(theTransaction);
-                System.out.println("transaction OK");
-                transactionDetailService.save(theTransactionDetail);
-                System.out.println("transaction detail OK");
-                balanceService.save(theBalance);
-                System.out.println("balance OK");
+                try {
+                    // save
+                    productService.updateStock(balanceType, productId, quantity, maxCapacity);
+                    transactionService.save(theTransaction);
+                    transactionDetailService.save(theTransactionDetail);
+                    balanceService.save(theBalance);
 
-                // delete/add eggs/chicken
-                if (productId == 1) {
-                    eggService.createDeleteEggs(balanceType, quantity, theProduct, theFarm, currentDate, maxCapacity);
-                } else if (productId == 2) {
-                    chickenService.createDeleteChickens(balanceType, quantity, theProduct, theFarm, currentDate, maxCapacity);
+                    // delete/add eggs/chicken
+                    if (productId == 1) {
+                        eggService.createDeleteEggs(balanceType, quantity, theProduct, theFarm, currentDate, maxCapacity);
+                    } else if (productId == 2) {
+                        chickenService.createDeleteChickens(balanceType, quantity, theProduct, theFarm, currentDate, maxCapacity);
+                    }
+
+                    message = ResponseEntity.ok("Transaction saved successfully.");
+
+                } catch (Exception e2) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while trying to save the transaction.");
                 }
-
-                message = ResponseEntity.ok("Transaction saved successfully.");
             }
 
             return message;
 
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while trying to save the transaction.");
+        } catch (
+                Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while preparing the transaction.");
         }
 
     }

@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -52,53 +51,60 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests(authorizeRequests ->
-                authorizeRequests
-                        .requestMatchers(HttpMethod.GET, "/users/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/users/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/users/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("ADMIN")
+                        authorizeRequests
+                                .requestMatchers(HttpMethod.GET, "/users/**").hasAuthority("ADMIN")
 
-                        .requestMatchers(HttpMethod.POST, "/farms/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/farms/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/farms/**").hasAuthority("MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/logs/**").hasAuthority("ADMIN")
 
-                        .requestMatchers(HttpMethod.PUT, "/transactions/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.GET, "/transactions/**").hasAuthority("EMPLOYEE")
-                        .requestMatchers(HttpMethod.POST, "/transactions/**").hasAuthority("EMPLOYEE")
+                                .requestMatchers(HttpMethod.GET, "/balances/**").hasAuthority("MANAGER")
+                                .requestMatchers(HttpMethod.POST, "/balances/**").hasAuthority("EMPLOYEE")
 
-                        .requestMatchers(HttpMethod.GET, "/balances/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.POST, "/balances/**").hasAuthority("EMPLOYEE")
+                                .requestMatchers(HttpMethod.GET, "/chickens/showUpdateChickenForm").hasAuthority("MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/chickens/**").hasAuthority("EMPLOYEE")
 
-                        .requestMatchers(HttpMethod.POST, "/parameters/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "/parameters/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.DELETE, "/parameters/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.GET, "/parameters/**").hasAuthority("EMPLOYEE")
+                                .requestMatchers(HttpMethod.GET, "/eggs/showUpdateEggForm").hasAuthority("MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/eggs/**").hasAuthority("EMPLOYEE")
 
-                        .requestMatchers(HttpMethod.POST, "/products/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "/products/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.DELETE, "/products/**").hasAuthority("MANAGER")
-                        .requestMatchers(HttpMethod.GET, "/products/**").hasAuthority("EMPLOYEE")
+                                .requestMatchers(HttpMethod.POST, "/parameters/**").hasAuthority("MANAGER")
+                                .requestMatchers(HttpMethod.PUT, "/parameters/**").hasAuthority("MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/parameters/**").hasAuthority("EMPLOYEE")
 
-                        .requestMatchers(HttpMethod.GET, "/api/transactions/**").hasAuthority("EMPLOYEE")
-                        .requestMatchers(HttpMethod.POST, "/api/transactions/**").hasAuthority("EMPLOYEE")
+                                .requestMatchers(HttpMethod.POST, "/products/**").hasAuthority("MANAGER")
+                                .requestMatchers(HttpMethod.PUT, "/products/**").hasAuthority("MANAGER")
+                                .requestMatchers(HttpMethod.DELETE, "/products/**").hasAuthority("MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/products/**").hasAuthority("EMPLOYEE")
 
-                        .requestMatchers(HttpMethod.POST, "/advanceDays").hasAuthority("EMPLOYEE")
+                                .requestMatchers(HttpMethod.GET, "/transactions/**").hasAuthority("EMPLOYEE")
+                                .requestMatchers(HttpMethod.POST, "/transactions/**").hasAuthority("EMPLOYEE")
 
-                        .requestMatchers("/chickens/**").hasAuthority("EMPLOYEE")
+                                .requestMatchers(HttpMethod.GET, "/api/transactions/**").hasAuthority("EMPLOYEE")
+                                .requestMatchers(HttpMethod.POST, "/api/transactions/**").hasAuthority("EMPLOYEE")
 
-                        .requestMatchers("/eggs/**").hasAuthority("EMPLOYEE")
+                                .requestMatchers(HttpMethod.POST, "/advanceDays").hasAuthority("EMPLOYEE")
 
-                        .requestMatchers("/").hasAuthority("EMPLOYEE")
+                                .requestMatchers("/chickens/**").hasAuthority("EMPLOYEE")
 
-                        .requestMatchers("/", "/index.html", "/css/**", "/js/**").permitAll()
-                        .anyRequest().authenticated()
+                                .requestMatchers("/eggs/**").hasAuthority("EMPLOYEE")
 
-        ).formLogin(withDefaults());
+                                .requestMatchers("/").hasAuthority("EMPLOYEE")
 
+                                .requestMatchers("/", "/index.html", "/css/**", "/js/**").permitAll()
+                                .anyRequest().authenticated()
 
-        //http.httpBasic(withDefaults());
+                ).formLogin(withDefaults())
+
+                .logout(logout ->
+                        logout
+                                .logoutUrl("/logout")
+                                .logoutSuccessUrl("/")
+                                .invalidateHttpSession(true)
+                                .deleteCookies("JSESSIONID"))
+
+                .exceptionHandling(configurer ->
+                        configurer.accessDeniedPage("/error")
+                );
+
         return http.build();
     }
-
 
 }

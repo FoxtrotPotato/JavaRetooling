@@ -14,9 +14,7 @@ public interface ProductService {
 
     void deleteById(int theId);
 
-    void deleteList(List<Product> products);
-
-    ResponseEntity updateStock(String balanceType, int productId, int quantity, int maxCapacity);
+    ResponseEntity<String> updateStock(String balanceType, int productId, int quantity, int maxCapacity);
 
     Double getProductPrice(int productId);
 }
